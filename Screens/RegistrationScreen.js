@@ -90,7 +90,6 @@ export const RegistrationScreen = () => {
               }
               onFocus={() => setIsShowKeyboard(true)}
             />
-
             <TouchableOpacity activeOpacity={0.8} style={styles.button}>
               <Text style={styles.btnTitle}>Зарегистрироваться</Text>
             </TouchableOpacity>
