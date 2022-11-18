@@ -50,19 +50,21 @@ export const RegistrationScreen = () => {
   // });
 
   const KeyboardHide = () => {
-    // setIsShowKeyboard(false);
+    setIsShowKeyboard(true);
+    console.log(setIsShowKeyboard);
     Keyboard.dismiss();
     console.log(state);
     setState(initialState);
   };
 
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+    <TouchableWithoutFeedback onPress={KeyboardHide}>
       <KeyboardAvoidingView
         behavior={Platform.OS == "ios" ? "padding" : "height"}
       >
         <View style={styles.form}>
           <View
+            onLayout={() => setIsShowKeyboard(true)}
             style={{
               ...styles.inputForm,
               marginBottom: isShowKeyboard ? 45 : 150,
