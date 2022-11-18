@@ -9,8 +9,11 @@ import {
   Text,
   Platform,
   KeyboardAvoidingView,
-  Dimensions,
+  // Dimensions,
+  Pressable,
+  Button,
 } from "react-native";
+import { A } from "@expo/html-elements";
 
 const initialState = {
   username: "",
@@ -21,51 +24,56 @@ const initialState = {
 export const RegistrationScreen = () => {
   const [state, setState] = useState(initialState);
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
-  const [dimensions, setDimensions] = useState(
-    Dimensions.get("window").width - 8 * 2
-  );
+  console.log(isShowKeyboard);
 
-  useEffect(() => {
-    onchange = () => {
-      const width = Dimensions.get("window").width - 8 * 2;
-      setDimensions(width);
-    };
-    Dimensions.addEventListener("change", onchange);
-    return () => {
-      Dimensions.removeEventListener("change", onchange);
-    };
-  }, []);
+  const [type, setType] = useState(false);
+  const handleClick = () => setType("text");
+
+  // const [dimensions, setDimensions] = useState(
+  //   Dimensions.get("window").width - 8 * 2
+  // );
+
+  // useEffect(() => {
+  //   onchange = () => {
+  //     const width = Dimensions.get("window").width - 8 * 2;
+  //     setDimensions(width);
+  //     // setIsShowKeyboard(true);
+  //   };
+  //   Dimensions.addEventListener("change", onchange);
+  //   return () => {
+  //     Dimensions.removeEventListener("change", onchange);
+  //   };
+  // }, []);
+
+  // useEffect(() => {
+  //   setIsShowKeyboard(true);
+  // });
 
   const KeyboardHide = () => {
-    setIsShowKeyboard(false);
+    // setIsShowKeyboard(false);
     Keyboard.dismiss();
-    // console.log(state);
+    console.log(state);
     setState(initialState);
   };
 
   return (
-    <TouchableWithoutFeedback onPress={KeyboardHide}>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <KeyboardAvoidingView
         behavior={Platform.OS == "ios" ? "padding" : "height"}
       >
-        <View
-          style={styles.form}
-          // style={{
-          //   ...styles.form,
-          //   paddingBottom: isShowKeyboard ? 45 : 150,
-          // }}
-        >
+        <View style={styles.form}>
           <View
             style={{
               ...styles.inputForm,
               marginBottom: isShowKeyboard ? 45 : 150,
-              width: dimensions,
+              // width: dimensions,
             }}
           >
             <Text style={styles.title}>Регистрация</Text>
             <TextInput
               style={styles.input}
               placeholder={"Логин"}
+              value={state.username}
               onChangeText={(value) =>
                 setState((prevState) => ({ ...prevState, username: value }))
               }
@@ -75,21 +83,31 @@ export const RegistrationScreen = () => {
             <TextInput
               style={styles.input}
               placeholder={"Адрес электронной почты"}
+              value={state.email}
               onChangeText={(value) =>
                 setState((prevState) => ({ ...prevState, email: value }))
               }
               autoCapitalize={"none"}
               onFocus={() => setIsShowKeyboard(true)}
             />
-            <TextInput
-              style={styles.input}
-              placeholder={"Пароль"}
-              secureTextEntry={true}
-              onChangeText={(value) =>
-                setState((prevState) => ({ ...prevState, password: value }))
-              }
-              onFocus={() => setIsShowKeyboard(true)}
-            />
+            <View style={styles.inputSection}>
+              <TextInput
+                // style={styles.input}
+                style={styles.inputPassword}
+                type={type}
+                placeholder={"Пароль"}
+                secureTextEntry={type ? false : true}
+                value={state.password}
+                onChangeText={(value) =>
+                  setState((prevState) => ({ ...prevState, password: value }))
+                }
+                onFocus={() => setIsShowKeyboard(true)}
+              />
+
+              <Pressable style={styles.show} onPress={handleClick}>
+                <Text style={styles.showText}>Показать</Text>
+              </Pressable>
+            </View>
             <TouchableOpacity activeOpacity={0.8} style={styles.button}>
               <Text style={styles.btnTitle}>Зарегистрироваться</Text>
             </TouchableOpacity>
@@ -106,7 +124,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
-    alignItems: "center",
+    // alignItems: "center",
+    marginHorizontal: 16,
   },
   title: {
     marginTop: 32,
@@ -119,7 +138,6 @@ const styles = StyleSheet.create({
   input: {
     height: 50,
     marginBottom: 16,
-    // marginHorizontal: 16,
     backgroundColor: "#F6F6F6",
     borderColor: "#E8E8E8",
     borderWidth: 1,
@@ -141,7 +159,6 @@ const styles = StyleSheet.create({
     height: 51,
     alignItems: "center",
     justifyContent: "center",
-    // marginHorizontal: 16,
     borderRadius: 100,
     borderWidth: 1,
     borderColor: "#FF6C00",
@@ -151,5 +168,33 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: "Roboto-Regular",
   },
-  inputForm: {},
+  inputForm: {
+    marginBottom: 45,
+  },
+  show: {
+    position: "absolute",
+    right: 100,
+    transform: [{ translateX: 100 }],
+  },
+  inputSection: {
+    position: "relative",
+    height: 50,
+    marginBottom: 16,
+    backgroundColor: "#F6F6F6",
+    borderColor: "#E8E8E8",
+    borderWidth: 1,
+    padding: 16,
+    borderRadius: 8,
+    color: "#212121",
+    fontFamily: "Roboto-Regular",
+
+    justifyContent: "center",
+    alignItems: "baseline",
+  },
+  inputPassword: {
+    position: "absolute",
+  },
+  showText: {
+    color: "#1B4371",
+  },
 });

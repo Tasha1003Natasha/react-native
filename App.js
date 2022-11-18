@@ -4,7 +4,7 @@ import { RegistrationScreen } from "./Screens/RegistrationScreen";
 
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useEffect, useCallback } from "react";
 
 // const loadFonts = async () => {
 //   await Font.loadAsync({
