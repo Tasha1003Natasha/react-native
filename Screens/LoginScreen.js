@@ -15,16 +15,13 @@ import {
 } from "react-native";
 
 const initialState = {
-  username: "",
   email: "",
   password: "",
 };
 
-export const RegistrationScreen = () => {
+export const LoginScreen = () => {
   const [state, setState] = useState(initialState);
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
-  console.log(isShowKeyboard);
-
   const [type, setType] = useState(false);
   const handleClick = () => setType("text");
 
@@ -58,44 +55,16 @@ export const RegistrationScreen = () => {
         behavior={Platform.OS == "ios" ? "padding" : "height"}
       >
         <View style={styles.form}>
-          {/* /* Аватарка */}
-          <View style={styles.avatarSection}>
-            <TouchableOpacity onPress={addImage}>
-              {image && (
-                <Image
-                  source={{ uri: image }}
-                  style={{ width: 132, height: 120 }}
-                />
-              )}
-              <Image
-                source={
-                  image
-                    ? require("../assets/close.png")
-                    : require("../assets/add.png")
-                }
-                style={image ? styles.avatarClose : styles.avatarAdd}
-              />
-            </TouchableOpacity>
-          </View>
           <View
             onLayout={() => setIsShowKeyboard(true)}
             style={{
               ...styles.inputForm,
-              marginBottom: isShowKeyboard ? 45 : 150,
+              marginBottom: isShowKeyboard ? 110 : 150,
               width: dimensions,
             }}
           >
-            <Text style={styles.title}>Регистрация</Text>
-            <TextInput
-              style={styles.input}
-              placeholder={"Логин"}
-              value={state.username}
-              onChangeText={(value) =>
-                setState((prevState) => ({ ...prevState, username: value }))
-              }
-              autoCapitalize={"none"}
-              onFocus={() => setIsShowKeyboard(true)}
-            />
+            <Text style={styles.title}>Войти</Text>
+
             <TextInput
               style={styles.input}
               placeholder={"Адрес электронной почты"}
@@ -124,9 +93,9 @@ export const RegistrationScreen = () => {
               </Pressable>
             </View>
             <TouchableOpacity activeOpacity={0.8} style={styles.button}>
-              <Text style={styles.btnTitle}>Зарегистрироваться</Text>
+              <Text style={styles.btnTitle}>Войти</Text>
             </TouchableOpacity>
-            <Text style={styles.text}>Уже есть аккаунт? Войти</Text>
+            <Text style={styles.text}>Нет аккаунта? Зарегистрироваться</Text>
           </View>
         </View>
       </KeyboardAvoidingView>
@@ -143,7 +112,7 @@ const styles = StyleSheet.create({
     position: "relative",
   },
   title: {
-    marginTop: 92,
+    marginTop: 32,
     marginBottom: 33,
     textAlign: "center",
     fontSize: 30,
@@ -170,7 +139,7 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: "#FF6C00",
-    marginTop: 27,
+    marginTop: 43,
     height: 51,
     alignItems: "center",
     justifyContent: "center",
@@ -184,7 +153,7 @@ const styles = StyleSheet.create({
     fontFamily: "Roboto-Regular",
   },
   inputForm: {
-    marginBottom: 45,
+    marginBottom: 110,
   },
   show: {
     position: "absolute",
@@ -213,27 +182,5 @@ const styles = StyleSheet.create({
   },
   showText: {
     color: "#1B4371",
-  },
-  avatarSection: {
-    position: "absolute",
-    backgroundColor: "#F6F6F6",
-    borderRadius: 16,
-    width: 120,
-    height: 120,
-    top: 92,
-    right: 70,
-    transform: [{ translateY: -150 }, { translateX: -70 }],
-  },
-  avatarAdd: {
-    position: "absolute",
-    top: 100,
-    left: 35,
-    transform: [{ translateY: -30 }, { translateX: 70 }],
-  },
-  avatarClose: {
-    position: "absolute",
-    top: 100,
-    left: 30,
-    transform: [{ translateY: -30 }, { translateX: 70 }],
   },
 });

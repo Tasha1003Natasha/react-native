@@ -1,6 +1,7 @@
 // import React from "react";
 import { ImageBackground, StyleSheet, View } from "react-native";
 import { RegistrationScreen } from "./Screens/RegistrationScreen";
+import { LoginScreen } from "./Screens/LoginScreen";
 
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
@@ -43,6 +44,7 @@ export default function App() {
         style={styles.image}
       >
         <RegistrationScreen />
+        {/* <LoginScreen /> */}
       </ImageBackground>
     </View>
   );
@@ -52,13 +54,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
-    // alignItems: "center",
-    // justifyContent: "center",
+    justifyContent: "center",
   },
   image: {
     flex: 1,
     resizeMode: "cover",
-    // justifyContent: "center",
     justifyContent: "flex-end",
   },
 });
