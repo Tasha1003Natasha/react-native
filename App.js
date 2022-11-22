@@ -1,20 +1,15 @@
-// import React from "react";
-import { ImageBackground, StyleSheet, View } from "react-native";
-import { RegistrationScreen } from "./Screens/RegistrationScreen";
-import { LoginScreen } from "./Screens/LoginScreen";
+import { RegistrationScreen } from "./screens/auth/RegistrationScreen";
+import { LoginScreen } from "./screens/auth/LoginScreen";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
 
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import React, { useEffect, useCallback } from "react";
 
-// const loadFonts = async () => {
-//   await Font.loadAsync({
-//     "Roboto-Regular": require("./assets/fonts/Roboto-Regular.ttf"),
-//     "Roboto-Medium": require("./assets/fonts/Roboto-Medium.ttf"),
-//   });
-// };
-
 export default function App() {
+  const MainStack = createStackNavigator();
+
   const [fontsLoaded] = useFonts({
     "Roboto-Regular": require("./assets/fonts/Roboto-Regular.ttf"),
     "Roboto-Medium": require("./assets/fonts/Roboto-Medium.ttf"),
@@ -38,27 +33,11 @@ export default function App() {
   }
 
   return (
-    <View style={styles.container} onLayout={onLayoutRootView}>
-      <ImageBackground
-        source={require("./assets/image.png")}
-        style={styles.image}
-      >
-        <RegistrationScreen />
-        {/* <LoginScreen /> */}
-      </ImageBackground>
-    </View>
+    <NavigationContainer onLayout={onLayoutRootView}>
+      <MainStack.Navigator>
+        <MainStack.Screen name="Registration" component={RegistrationScreen} />
+        <MainStack.Screen name="Login" component={LoginScreen} />
+      </MainStack.Navigator>
+    </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    justifyContent: "center",
-  },
-  image: {
-    flex: 1,
-    resizeMode: "cover",
-    justifyContent: "flex-end",
-  },
-});
