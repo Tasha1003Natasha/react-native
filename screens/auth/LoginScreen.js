@@ -25,27 +25,33 @@ export const LoginScreen = () => {
   const [type, setType] = useState(false);
   const handleClick = () => setType("text");
 
-  const [image, setImage] = useState(null);
-  const addImage = () => {};
-
   const [dimensions, setDimensions] = useState(
     Dimensions.get("window").width - 8 * 2
   );
+
+  // useEffect(() => {
+  //   onchange = () => {
+  //     const width = Dimensions.get("window").width - 8 * 2;
+  //     setDimensions(width);
+  //   };
+  //   Dimensions.addEventListener("change", onchange);
+  //   return () => {
+  //     Dimensions.removeEventListener("change", onchange);
+  //   };
+  // }, []);
 
   useEffect(() => {
     onchange = () => {
       const width = Dimensions.get("window").width - 8 * 2;
       setDimensions(width);
     };
-    Dimensions.addEventListener("change", onchange);
-    return () => {
-      Dimensions.removeEventListener("change", onchange);
-    };
+    const subscription = Dimensions.addEventListener("change", onchange);
+    return () => subscription.remove();
   }, []);
 
   const KeyboardHide = () => {
     Keyboard.dismiss();
-    console.log(state);
+    // console.log(state);
     setState(initialState);
   };
 

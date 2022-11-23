@@ -21,10 +21,9 @@ const initialState = {
   password: "",
 };
 
-export const RegistrationScreen = () => {
+export const RegistrationScreen = ({ navigation }) => {
   const [state, setState] = useState(initialState);
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
-  console.log(isShowKeyboard);
 
   const [type, setType] = useState(false);
   const handleClick = () => setType("text");
@@ -41,15 +40,17 @@ export const RegistrationScreen = () => {
       const width = Dimensions.get("window").width - 8 * 2;
       setDimensions(width);
     };
-    Dimensions.addEventListener("change", onchange);
-    return () => {
-      Dimensions.removeEventListener("change", onchange);
-    };
+
+    const subscription = Dimensions.addEventListener("change", onchange);
+    return () => subscription.remove();
+    // return () => {
+    //   Dimensions.removeEventListener("change", onchange);
+    // };
   }, []);
 
   const KeyboardHide = () => {
     Keyboard.dismiss();
-    console.log(state);
+    // console.log(state);
     setState(initialState);
   };
 
@@ -132,10 +133,23 @@ export const RegistrationScreen = () => {
                     <Text style={styles.showText}>Показать</Text>
                   </Pressable>
                 </View>
+
                 <TouchableOpacity activeOpacity={0.8} style={styles.button}>
                   <Text style={styles.btnTitle}>Зарегистрироваться</Text>
                 </TouchableOpacity>
-                <Text style={styles.text}>Уже есть аккаунт? Войти</Text>
+
+                <Text
+                  onPress={() => navigation.navigate("Login")}
+                  style={styles.text}
+                >
+                  Уже есть аккаунт? Войти
+                </Text>
+
+                {/* <TouchableOpacity onPress={() => navigate.navigate("Login")}>
+                  <Text style={styles.text}>Уже есть аккаунт? Войти</Text>
+                </TouchableOpacity> */}
+
+                {/* <Text style={styles.text}>Уже есть аккаунт? Войти</Text> */}
               </View>
             </View>
           </KeyboardAvoidingView>

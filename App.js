@@ -6,6 +6,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import React, { useEffect, useCallback } from "react";
+// import { View } from "react-native";
 
 export default function App() {
   const MainStack = createStackNavigator();
@@ -35,9 +36,27 @@ export default function App() {
   return (
     <NavigationContainer onLayout={onLayoutRootView}>
       <MainStack.Navigator>
-        <MainStack.Screen name="Registration" component={RegistrationScreen} />
-        <MainStack.Screen name="Login" component={LoginScreen} />
+        <MainStack.Screen
+          options={{
+            headerShown: false,
+          }}
+          name="Registration"
+          component={RegistrationScreen}
+        />
+        <MainStack.Screen
+          options={{
+            headerShown: false,
+          }}
+          name="Login"
+          component={LoginScreen}
+        />
       </MainStack.Navigator>
     </NavigationContainer>
   );
+
+  // return (
+  //   <View onLayout={onLayoutRootView}>
+  //     <RegistrationScreen />
+  //   </View>
+  // );
 }
