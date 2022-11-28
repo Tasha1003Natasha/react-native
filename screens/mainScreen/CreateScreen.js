@@ -79,12 +79,13 @@ export const CreateScreen = () => {
             autoCapitalize={"none"}
             // onFocus={() => setIsShowKeyboard(true)}
           />
-          <MapView style={styles.map}>
+          <Pressable style={styles.mapList}>
             <Image
               source={require("../../assets/map.png")}
               style={styles.iconMap}
             />
-          </MapView>
+            <MapView style={styles.map} />
+          </Pressable>
 
           {image ? (
             <TouchableOpacity activeOpacity={0.8} style={styles.buttonHover}>
@@ -181,7 +182,7 @@ const styles = StyleSheet.create({
     fontFamily: "Roboto-Regular",
     marginLeft: 25,
   },
-  map: {
+  mapList: {
     borderBottomColor: "#E8E8E8",
     borderBottomWidth: 1,
     marginBottom: 16,
@@ -228,5 +229,9 @@ const styles = StyleSheet.create({
   trash: {
     flexDirection: "row",
     justifyContent: "center",
+  },
+  map: {
+    width: "100%",
+    height: "100%",
   },
 });

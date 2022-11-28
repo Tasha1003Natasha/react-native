@@ -6,18 +6,22 @@ import {
   TouchableOpacity,
   Image,
   TextInput,
-  Pressable,
 } from "react-native";
+import UserAvatar from "react-native-user-avatar";
 
 const initialState = {
   name: "",
   terrain: "",
+  comment: "",
 };
 
 export const CommentsScreen = () => {
   const [state, setState] = useState(initialState);
   const [image, setImage] = useState(null);
   const addImage = () => {};
+
+  //   const userName = useSelector(state => state.user?.user?.email);
+  //   const avatarName = userName?.slice(0, 1).toLocaleUpperCase();
 
   return (
     <View style={styles.container}>
@@ -29,7 +33,6 @@ export const CommentsScreen = () => {
         <Text style={styles.postsText}>Комментарии</Text>
       </TouchableOpacity>
       <View style={styles.postsLine} />
-
       <View style={styles.containerCreateScreen}>
         <TouchableOpacity style={styles.containerScreen} onPress={addImage}>
           {image ? (
@@ -43,11 +46,35 @@ export const CommentsScreen = () => {
               style={styles.imageScreen}
             />
           )}
-          {/* <Image
-            source={require("../../assets/icon_screen.png")}
-            style={styles.imageScreen}
-          /> */}
-          {/* <Text style={styles.textScreen}>Загрузите фото</Text> */}
+
+          <View style={styles.containerComment}>
+            <UserAvatar style={styles.avatar} name="avatar" />
+            {/* <Text style={styles.avatarName}>{avatarName || "U"}</Text> */}
+            <View style={styles.comment}>
+              <Text style={styles.commentText}>
+                Really love your most recent photo. I’ve been trying to capture
+                the same thing for a few months and would love some tips!
+              </Text>
+              <Text style={styles.commentData}>09 июня, 2020 | 08:40</Text>
+            </View>
+          </View>
+        </TouchableOpacity>
+      </View>
+
+      <View style={styles.form}>
+        <TextInput
+          style={styles.input}
+          placeholder={"Комментировать..."}
+          value={state.name}
+          onChangeText={(value) =>
+            setState((prevState) => ({ ...prevState, comment: value }))
+          }
+          autoCapitalize={"none"}
+          // onFocus={() => setIsShowKeyboard(true)}
+        />
+
+        <TouchableOpacity style={styles.send}>
+          <Image source={require("../../assets/send.png")} />
         </TouchableOpacity>
       </View>
     </View>
@@ -93,12 +120,6 @@ const styles = StyleSheet.create({
     borderColor: "#E8E8E8",
     marginTop: 32,
   },
-  //   imageScreen: {
-  //     marginTop: 90,
-  //     marginBottom: 90,
-  //     marginLeft: 141,
-  //     marginRight: 141,
-  //   },
   textScreen: {
     color: "#BDBDBD",
     marginTop: 8,
@@ -107,74 +128,60 @@ const styles = StyleSheet.create({
   },
   form: {
     marginTop: 32,
-    position: "relative",
-
     flex: 1,
+    marginHorizontal: 16,
+    position: "relative",
+    justifyContent: "flex-end",
   },
   input: {
     height: 50,
     marginBottom: 16,
-    borderBottomColor: "#E8E8E8",
-    borderBottomWidth: 1,
-
-    color: "#BDBDBD",
-    fontSize: 16,
-    fontFamily: "Roboto-Regular",
-  },
-  inputMap: {
-    height: 50,
-
-    color: "#BDBDBD",
-    fontSize: 16,
-    fontFamily: "Roboto-Regular",
-    marginLeft: 25,
-  },
-  map: {
-    borderBottomColor: "#E8E8E8",
-    borderBottomWidth: 1,
-    marginBottom: 16,
-  },
-  iconMap: {
-    position: "absolute",
-    top: 112,
-    right: 170,
-    transform: [{ translateY: -150 }, { translateX: -170 }],
-    padding: 4,
-  },
-  button: {
+    borderColor: "#E8E8E8",
+    borderWidth: 1,
     backgroundColor: "#F6F6F6",
-    marginTop: 32,
-    height: 51,
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: 100,
-    borderWidth: 1,
-    borderColor: "#F6F6F6",
-    marginBottom: 32,
-  },
-  btnTitle: {
     color: "#BDBDBD",
     fontSize: 16,
     fontFamily: "Roboto-Regular",
-  },
-  buttonHover: {
-    backgroundColor: "#FF6C00",
-    marginTop: 32,
-    height: 51,
-    alignItems: "center",
-    justifyContent: "center",
     borderRadius: 100,
-    borderWidth: 1,
-    borderColor: "#FF6C00",
-    marginBottom: 32,
+    padding: 15,
   },
-  btnTitleHover: {
-    color: "#FFFFFF",
-    fontSize: 16,
-    fontFamily: "Roboto-Regular",
+  send: {
+    position: "absolute",
+    bottom: 8,
+    right: 40,
+    transform: [{ translateY: -8 }, { translateX: 40 }],
+    padding: 8,
   },
-  trash: {
+
+  //Comment
+  containerComment: {
     flexDirection: "row",
     justifyContent: "center",
+    marginTop: 32,
+    marginBottom: 24,
+    marginHorizontal: 16,
+  },
+  avatar: {
+    alignItems: "flex-start",
+    borderRadius: 100 / 2,
+    backgroundColor: "#F6F6F6",
+    width: 32,
+    height: 32,
+  },
+  comment: {
+    alignItems: "flex-end",
+    backgroundColor: "rgba(0, 0, 0, 0.03)",
+    padding: 16,
+    marginLeft: 16,
+  },
+  commentText: {
+    color: "#212121",
+    fontSize: 13,
+    fontFamily: "Roboto-Regular",
+  },
+  commentData: {
+    color: "#BDBDBD",
+    fontSize: 10,
+    fontFamily: "Roboto-Regular",
   },
 });

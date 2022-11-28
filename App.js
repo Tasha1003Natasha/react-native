@@ -44,11 +44,11 @@ export default function App() {
   return (
     <NavigationContainer onLayout={onLayoutRootView}>
       <MainTab.Navigator>
-        {/* <MainTab.Screen name="Posts" component={PostsScreen} /> */}
+        {/* <MainTab.Screen name="Posts" component={PostsScreen} />
+        <MainTab.Screen name="Create" component={CreateScreen} /> */}
 
-        <MainTab.Screen name="Create" component={CreateScreen} />
-        {/* 
-        <MainTab.Screen name="Comments" component={CommentsScreen} />  */}
+        <MainTab.Screen name="Comments" component={CommentsScreen} />
+
         <MainTab.Screen name="Profile" component={ProfileScreen} />
       </MainTab.Navigator>
     </NavigationContainer>
