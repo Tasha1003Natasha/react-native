@@ -16,6 +16,8 @@ const initialState = {
 
 export const CreateScreen = () => {
   const [state, setState] = useState(initialState);
+  const [image, setImage] = useState(null);
+  const addImage = () => {};
 
   return (
     <View style={styles.container}>
@@ -29,12 +31,29 @@ export const CreateScreen = () => {
       <View style={styles.postsLine} />
 
       <View style={styles.containerCreateScreen}>
-        <TouchableOpacity style={styles.containerScreen}>
-          <Image
+        <TouchableOpacity style={styles.containerScreen} onPress={addImage}>
+          {!image ? (
+            <Image
+              source={{ uri: image }}
+              style={{ width: 343, height: 240 }}
+            />
+          ) : (
+            <Image
+              source={require("../../assets/icon_screen.png")}
+              style={styles.imageScreen}
+            />
+          )}
+          {/* <Image
             source={require("../../assets/icon_screen.png")}
             style={styles.imageScreen}
-          />
-          <Text style={styles.textScreen}>Загрузите фото</Text>
+          /> */}
+          {/* <Text style={styles.textScreen}>Загрузите фото</Text> */}
+
+          {!image ? (
+            <Text style={styles.textScreen}>Редактировать фото</Text>
+          ) : (
+            <Text style={styles.textScreen}>Загрузите фото</Text>
+          )}
         </TouchableOpacity>
 
         <View style={styles.form}>
@@ -66,9 +85,19 @@ export const CreateScreen = () => {
             />
           </Pressable>
 
-          <TouchableOpacity activeOpacity={0.8} style={styles.button}>
+          {!image ? (
+            <TouchableOpacity activeOpacity={0.8} style={styles.buttonHover}>
+              <Text style={styles.btnTitleHover}>Опубликовать</Text>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity activeOpacity={0.8} style={styles.button}>
+              <Text style={styles.btnTitle}>Опубликовать</Text>
+            </TouchableOpacity>
+          )}
+
+          {/* <TouchableOpacity activeOpacity={0.8} style={styles.button}>
             <Text style={styles.btnTitle}>Опубликовать</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
 
           <TouchableOpacity style={styles.trash}>
             <Image source={require("../../assets/trash.png")} />
@@ -163,7 +192,6 @@ const styles = StyleSheet.create({
     padding: 4,
   },
   button: {
-    // backgroundColor: "#FF6C00",///hover
     backgroundColor: "#F6F6F6",
     marginTop: 32,
     height: 51,
@@ -171,13 +199,27 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     borderRadius: 100,
     borderWidth: 1,
-    // borderColor: "#FF6C00",///hover
     borderColor: "#F6F6F6",
     marginBottom: 32,
   },
   btnTitle: {
-    // color: "#FFFFFF",///hover
     color: "#BDBDBD",
+    fontSize: 16,
+    fontFamily: "Roboto-Regular",
+  },
+  buttonHover: {
+    backgroundColor: "#FF6C00",
+    marginTop: 32,
+    height: 51,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 100,
+    borderWidth: 1,
+    borderColor: "#FF6C00",
+    marginBottom: 32,
+  },
+  btnTitleHover: {
+    color: "#FFFFFF",
     fontSize: 16,
     fontFamily: "Roboto-Regular",
   },
