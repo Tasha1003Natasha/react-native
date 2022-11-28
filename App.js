@@ -3,6 +3,7 @@ import { LoginScreen } from "./screens/auth/LoginScreen";
 import { PostsScreen } from "./screens/mainScreen/PostsScreen";
 import { ProfileScreen } from "./screens/mainScreen/ProfileScreen";
 import { CreateScreen } from "./screens/mainScreen/CreateScreen";
+import { CommentsScreen } from "./screens/mainScreen/CommentsScreen";
 
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -43,8 +44,11 @@ export default function App() {
   return (
     <NavigationContainer onLayout={onLayoutRootView}>
       <MainTab.Navigator>
-        <MainTab.Screen name="Posts" component={PostsScreen} />
+        {/* <MainTab.Screen name="Posts" component={PostsScreen} /> */}
+
         <MainTab.Screen name="Create" component={CreateScreen} />
+        {/* 
+        <MainTab.Screen name="Comments" component={CommentsScreen} />  */}
         <MainTab.Screen name="Profile" component={ProfileScreen} />
       </MainTab.Navigator>
     </NavigationContainer>

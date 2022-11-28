@@ -8,14 +8,13 @@ import {
   TextInput,
   Pressable,
 } from "react-native";
-import MapView from "react-native-maps";
 
 const initialState = {
   name: "",
   terrain: "",
 };
 
-export const CreateScreen = () => {
+export const CommentsScreen = () => {
   const [state, setState] = useState(initialState);
   const [image, setImage] = useState(null);
   const addImage = () => {};
@@ -27,7 +26,7 @@ export const CreateScreen = () => {
           source={require("../../assets/arrow_left.png")}
           style={styles.iconLeft}
         />
-        <Text style={styles.postsText}>Создать публикацию</Text>
+        <Text style={styles.postsText}>Комментарии</Text>
       </TouchableOpacity>
       <View style={styles.postsLine} />
 
@@ -40,7 +39,7 @@ export const CreateScreen = () => {
             />
           ) : (
             <Image
-              source={require("../../assets/icon_screen.png")}
+              source={require("../../assets/default_image.png")}
               style={styles.imageScreen}
             />
           )}
@@ -49,61 +48,7 @@ export const CreateScreen = () => {
             style={styles.imageScreen}
           /> */}
           {/* <Text style={styles.textScreen}>Загрузите фото</Text> */}
-
-          {image ? (
-            <Text style={styles.textScreen}>Редактировать фото</Text>
-          ) : (
-            <Text style={styles.textScreen}>Загрузите фото</Text>
-          )}
         </TouchableOpacity>
-
-        <View style={styles.form}>
-          <TextInput
-            style={styles.input}
-            placeholder={"Название..."}
-            value={state.name}
-            onChangeText={(value) =>
-              setState((prevState) => ({ ...prevState, name: value }))
-            }
-            autoCapitalize={"none"}
-            // onFocus={() => setIsShowKeyboard(true)}
-          />
-
-          <TextInput
-            style={styles.inputMap}
-            placeholder={"Местность..."}
-            value={state.terrain}
-            onChangeText={(value) =>
-              setState((prevState) => ({ ...prevState, terrain: value }))
-            }
-            autoCapitalize={"none"}
-            // onFocus={() => setIsShowKeyboard(true)}
-          />
-          <MapView style={styles.map}>
-            <Image
-              source={require("../../assets/map.png")}
-              style={styles.iconMap}
-            />
-          </MapView>
-
-          {image ? (
-            <TouchableOpacity activeOpacity={0.8} style={styles.buttonHover}>
-              <Text style={styles.btnTitleHover}>Опубликовать</Text>
-            </TouchableOpacity>
-          ) : (
-            <TouchableOpacity activeOpacity={0.8} style={styles.button}>
-              <Text style={styles.btnTitle}>Опубликовать</Text>
-            </TouchableOpacity>
-          )}
-
-          {/* <TouchableOpacity activeOpacity={0.8} style={styles.button}>
-            <Text style={styles.btnTitle}>Опубликовать</Text>
-          </TouchableOpacity> */}
-
-          <TouchableOpacity style={styles.trash}>
-            <Image source={require("../../assets/trash.png")} />
-          </TouchableOpacity>
-        </View>
       </View>
     </View>
   );
@@ -121,9 +66,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   postsText: {
+    marginLeft: 33,
     fontSize: 17,
     color: "#212121",
     fontFamily: "Roboto-Medium",
+    alignItems: "center",
   },
   postsLine: {
     borderBottomColor: "#E5E5E5",
@@ -135,22 +82,23 @@ const styles = StyleSheet.create({
   },
   containerCreateScreen: {
     paddingHorizontal: 16,
+    alignItems: "center",
   },
   containerScreen: {
     height: 240,
-    // width: 343,
+    width: 343,
     backgroundColor: "#F6F6F6",
     borderRadius: 8,
     borderWidth: 1,
     borderColor: "#E8E8E8",
     marginTop: 32,
   },
-  imageScreen: {
-    marginTop: 90,
-    marginBottom: 90,
-    marginLeft: 141,
-    marginRight: 141,
-  },
+  //   imageScreen: {
+  //     marginTop: 90,
+  //     marginBottom: 90,
+  //     marginLeft: 141,
+  //     marginRight: 141,
+  //   },
   textScreen: {
     color: "#BDBDBD",
     marginTop: 8,
