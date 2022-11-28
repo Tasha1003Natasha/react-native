@@ -40,7 +40,7 @@ export const PostsScreen = () => {
         <View style={styles.containerCreateScreen}>
           <TouchableOpacity style={styles.containerScreen}>
             <Image
-              // source={require("../../assets/icon_screen.png")}
+              source={require("../../assets/default_image.png")}
               style={styles.imageScreen}
             />
           </TouchableOpacity>
@@ -202,7 +202,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     flexWrap: "wrap",
     marginTop: 9,
-    marginBottom: 34,
+    marginBottom: 22,
   },
   toolbar: {
     marginLeft: 31,

@@ -41,10 +41,7 @@ export const CommentsScreen = () => {
               style={{ width: 343, height: 240 }}
             />
           ) : (
-            <Image
-              source={require("../../assets/default_image.png")}
-              style={styles.imageScreen}
-            />
+            <Image source={require("../../assets/default_image.png")} />
           )}
 
           <View style={styles.containerComment}>
