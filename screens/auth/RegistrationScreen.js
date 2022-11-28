@@ -43,14 +43,11 @@ export const RegistrationScreen = ({ navigation }) => {
 
     const subscription = Dimensions.addEventListener("change", onchange);
     return () => subscription.remove();
-    // return () => {
-    //   Dimensions.removeEventListener("change", onchange);
-    // };
   }, []);
 
   const KeyboardHide = () => {
     Keyboard.dismiss();
-    // console.log(state);
+    console.log(state);
     setState(initialState);
   };
 
@@ -138,18 +135,9 @@ export const RegistrationScreen = ({ navigation }) => {
                   <Text style={styles.btnTitle}>Зарегистрироваться</Text>
                 </TouchableOpacity>
 
-                <Text
-                  onPress={() => navigation.navigate("Login")}
-                  style={styles.text}
-                >
-                  Уже есть аккаунт? Войти
-                </Text>
-
-                {/* <TouchableOpacity onPress={() => navigate.navigate("Login")}>
+                <TouchableOpacity onPress={() => navigate.navigate("Login")}>
                   <Text style={styles.text}>Уже есть аккаунт? Войти</Text>
-                </TouchableOpacity> */}
-
-                {/* <Text style={styles.text}>Уже есть аккаунт? Войти</Text> */}
+                </TouchableOpacity>
               </View>
             </View>
           </KeyboardAvoidingView>

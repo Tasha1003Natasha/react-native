@@ -19,7 +19,7 @@ const initialState = {
   password: "",
 };
 
-export const LoginScreen = () => {
+export const LoginScreen = ({ navigation }) => {
   const [state, setState] = useState(initialState);
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [type, setType] = useState(false);
@@ -28,30 +28,19 @@ export const LoginScreen = () => {
   const [dimensions, setDimensions] = useState(
     Dimensions.get("window").width - 8 * 2
   );
-
-  // useEffect(() => {
-  //   onchange = () => {
-  //     const width = Dimensions.get("window").width - 8 * 2;
-  //     setDimensions(width);
-  //   };
-  //   Dimensions.addEventListener("change", onchange);
-  //   return () => {
-  //     Dimensions.removeEventListener("change", onchange);
-  //   };
-  // }, []);
-
   useEffect(() => {
     onchange = () => {
       const width = Dimensions.get("window").width - 8 * 2;
       setDimensions(width);
     };
+
     const subscription = Dimensions.addEventListener("change", onchange);
     return () => subscription.remove();
   }, []);
 
   const KeyboardHide = () => {
     Keyboard.dismiss();
-    // console.log(state);
+    console.log(state);
     setState(initialState);
   };
 
@@ -109,9 +98,14 @@ export const LoginScreen = () => {
                 <TouchableOpacity activeOpacity={0.8} style={styles.button}>
                   <Text style={styles.btnTitle}>Войти</Text>
                 </TouchableOpacity>
-                <Text style={styles.text}>
-                  Нет аккаунта? Зарегистрироваться
-                </Text>
+
+                <TouchableOpacity
+                  onPress={() => navigate.navigate("Registration")}
+                >
+                  <Text style={styles.text}>
+                    Нет аккаунта? Зарегистрироваться
+                  </Text>
+                </TouchableOpacity>
               </View>
             </View>
           </KeyboardAvoidingView>

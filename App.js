@@ -1,7 +1,12 @@
 import { RegistrationScreen } from "./screens/auth/RegistrationScreen";
 import { LoginScreen } from "./screens/auth/LoginScreen";
+import { PostsScreen } from "./screens/mainScreen/PostsScreen";
+import { ProfileScreen } from "./screens/mainScreen/ProfileScreen";
+import { CreateScreen } from "./screens/mainScreen/CreateScreen";
+
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
@@ -10,18 +15,20 @@ import React, { useEffect, useCallback } from "react";
 
 export default function App() {
   const MainStack = createStackNavigator();
+  const MainTab = createBottomTabNavigator();
 
   const [fontsLoaded] = useFonts({
     "Roboto-Regular": require("./assets/fonts/Roboto-Regular.ttf"),
     "Roboto-Medium": require("./assets/fonts/Roboto-Medium.ttf"),
+    "Roboto-Bold": require("./assets/fonts/Roboto-Bold.ttf"),
   });
 
-  useEffect(() => {
-    async function prepare() {
-      await SplashScreen.preventAutoHideAsync();
-    }
-    prepare();
-  }, []);
+  // useEffect(() => {
+  //   async function prepare() {
+  //     await SplashScreen.preventAutoHideAsync();
+  //   }
+  //   prepare();
+  // }, []);
 
   const onLayoutRootView = useCallback(async () => {
     if (fontsLoaded) {
@@ -35,7 +42,19 @@ export default function App() {
 
   return (
     <NavigationContainer onLayout={onLayoutRootView}>
-      <MainStack.Navigator>
+      <MainTab.Navigator>
+        <MainTab.Screen name="Posts" component={PostsScreen} />
+        <MainTab.Screen name="Create" component={CreateScreen} />
+        <MainTab.Screen name="Profile" component={ProfileScreen} />
+      </MainTab.Navigator>
+    </NavigationContainer>
+  );
+}
+
+// auth
+
+{
+  /* <MainStack.Navigator>
         <MainStack.Screen
           options={{
             headerShown: false,
@@ -50,13 +69,5 @@ export default function App() {
           name="Login"
           component={LoginScreen}
         />
-      </MainStack.Navigator>
-    </NavigationContainer>
-  );
-
-  // return (
-  //   <View onLayout={onLayoutRootView}>
-  //     <RegistrationScreen />
-  //   </View>
-  // );
+      </MainStack.Navigator> */
 }
