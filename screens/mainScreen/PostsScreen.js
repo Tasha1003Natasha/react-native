@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   View,
   Text,
@@ -19,6 +19,7 @@ export const PostsScreen = () => {
         />
       </TouchableOpacity>
       <View style={styles.postsLine} />
+
       <View style={styles.containerImage}>
         <ImageBackground
           source={require("../../assets/defult.png")}
