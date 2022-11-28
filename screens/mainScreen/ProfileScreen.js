@@ -168,11 +168,13 @@ const styles = StyleSheet.create({
     marginTop: 8,
     fontSize: 16,
     fontFamily: "Roboto-Medium",
+    marginHorizontal: 16,
   },
   // comment
   containerComment: {
     flex: 1,
     flexDirection: "row",
+    paddingHorizontal: 16,
   },
   comment: {
     marginLeft: 6,
