@@ -7,10 +7,11 @@ import {
   Image,
   ScrollView,
 } from "react-native";
-// import { Posts } from "../../components/Posts";
-// import { Toolbar } from "../../components/Toolbar";
+import { useNavigation } from "@react-navigation/native";
 
 export const Posts = () => {
+  const navigation = useNavigation();
+
   const [number, setNumber] = useState(0);
   const handleClick = () => setNumber(number + 1);
 
@@ -26,14 +27,16 @@ export const Posts = () => {
       <Text style={styles.textScreen}>Name</Text>
 
       <View style={styles.containerPostScreen}>
-        <TouchableOpacity style={styles.containerComment} onPress={handleClick}>
+        <TouchableOpacity
+          style={styles.containerComment}
+          onPress={() => navigation.navigate("Comments")}
+        >
           {number ? (
             <Image source={require("../assets/message_circle.png")} />
           ) : (
             <Image source={require("../assets/message.png")} />
           )}
 
-          {/* <Image source={require("../assets/message.png")} /> */}
           <Text style={styles.comment}>{number}</Text>
         </TouchableOpacity>
 

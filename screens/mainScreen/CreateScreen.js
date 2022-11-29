@@ -9,6 +9,7 @@ import {
   Pressable,
 } from "react-native";
 import MapView from "react-native-maps";
+import { useNavigation } from "@react-navigation/native";
 
 const initialState = {
   name: "",
@@ -16,13 +17,17 @@ const initialState = {
 };
 
 export const CreateScreen = () => {
+  const navigation = useNavigation();
   const [state, setState] = useState(initialState);
   const [image, setImage] = useState(null);
   const addImage = () => {};
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.containerPosts}>
+      <TouchableOpacity
+        style={styles.containerPosts}
+        onPress={() => navigation.navigate("Posts")}
+      >
         <Image
           source={require("../../assets/arrow_left.png")}
           style={styles.iconLeft}

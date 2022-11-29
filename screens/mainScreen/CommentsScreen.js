@@ -8,6 +8,7 @@ import {
   TextInput,
 } from "react-native";
 import UserAvatar from "react-native-user-avatar";
+import { useNavigation } from "@react-navigation/native";
 
 const initialState = {
   name: "",
@@ -19,13 +20,17 @@ export const CommentsScreen = () => {
   const [state, setState] = useState(initialState);
   const [image, setImage] = useState(null);
   const addImage = () => {};
+  const navigation = useNavigation();
 
   //   const userName = useSelector(state => state.user?.user?.email);
   //   const avatarName = userName?.slice(0, 1).toLocaleUpperCase();
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.containerPosts}>
+      <TouchableOpacity
+        style={styles.containerPosts}
+        onPress={() => navigation.navigate("Posts")}
+      >
         <Image
           source={require("../../assets/arrow_left.png")}
           style={styles.iconLeft}
