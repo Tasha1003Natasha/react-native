@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -6,13 +6,11 @@ import {
   TouchableOpacity,
   Image,
   ImageBackground,
-  ScrollView,
 } from "react-native";
+import { Posts } from "../../components/Posts";
+import { Toolbar } from "../../components/Toolbar";
 
 export const PostsScreen = () => {
-  const [number, setNumber] = useState(0);
-  const handleClick = () => setNumber(number + 1);
-
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.containerPosts}>
@@ -36,49 +34,14 @@ export const PostsScreen = () => {
             <Text style={styles.emailUser}>email@example.com</Text>
           </View>
         </View>
+      </View>
 
+      <View style={styles.post}>
         {/* Posts */}
-        <View style={styles.containerCreateScreen}>
-          <TouchableOpacity style={styles.containerScreen}>
-            <Image
-              source={require("../../assets/default_image.png")}
-              style={styles.imageScreen}
-            />
-          </TouchableOpacity>
-
-          <Text style={styles.textScreen}>Name</Text>
-
-          <View style={styles.containerPostScreen}>
-            <TouchableOpacity
-              style={styles.containerComment}
-              onPress={handleClick}
-            >
-              <Image source={require("../../assets/message.png")} />
-              <Text style={styles.comment}>{number}</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.containerMap}>
-              <Image
-                source={require("../../assets/map.png")}
-                style={styles.iconMap}
-              />
-              <Text style={styles.terrainScreen}>Terrain...</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
+        <Posts />
       </View>
 
-      <View tyle={styles.containerToolbar}>
-        <View style={styles.postsLine} />
-        <TouchableOpacity style={styles.toolbarItems}>
-          <Image source={require("../../assets/grid.png")} />
-          <Image
-            source={require("../../assets/new.png")}
-            style={styles.toolbar}
-          />
-          <Image source={require("../../assets/user.png")} />
-        </TouchableOpacity>
-      </View>
+      <Toolbar />
     </View>
   );
 };
@@ -96,6 +59,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "baseline",
     justifyContent: "flex-end",
+    paddingHorizontal: 16,
   },
   postsText: {
     alignItems: "center",
@@ -113,10 +77,14 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
   },
 
-  ////////Posts/////////
+  // ////////User/////////
   section: {
+    paddingHorizontal: 16,
+  },
+  post: {
     flex: 1,
     paddingHorizontal: 16,
+    alignItems: "center",
   },
   containerImage: {
     flexDirection: "row",
@@ -142,73 +110,5 @@ const styles = StyleSheet.create({
     color: "rgba(33,33,33,0.8)",
     fontSize: 11,
     fontFamily: "Roboto-Medium",
-  },
-  // Image
-  containerCreateScreen: {
-    paddingHorizontal: 16,
-    marginTop: 32,
-  },
-  containerScreen: {
-    height: 240,
-    width: 343,
-    backgroundColor: "#F6F6F6",
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: "#E8E8E8",
-    alignItems: "center",
-  },
-  containerPostScreen: {
-    flexDirection: "row",
-    marginTop: 10,
-  },
-  textScreen: {
-    color: "#212121",
-    marginTop: 8,
-    fontSize: 16,
-    fontFamily: "Roboto-Medium",
-  },
-  // comment
-  containerComment: {
-    flex: 1,
-    flexDirection: "row",
-  },
-  comment: {
-    marginLeft: 6,
-    color: "#BDBDBD",
-    fontSize: 16,
-    fontFamily: "Roboto-Regular",
-  },
-  // map
-  containerMap: {
-    flexDirection: "row",
-    textAlign: "left",
-    marginRight: 16,
-  },
-  terrainScreen: {
-    color: "#212121",
-    fontSize: 16,
-    fontFamily: "Roboto-Regular",
-    textDecorationLine: "underline",
-  },
-  iconMap: {
-    marginRight: 3,
-  },
-
-  // //User
-  containerToolbar: {
-    flex: 1,
-    position: "absolute",
-  },
-  toolbarItems: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    flexWrap: "wrap",
-    marginTop: 9,
-    marginBottom: 22,
-  },
-  toolbar: {
-    marginLeft: 31,
-    marginRight: 31,
   },
 });
