@@ -97,12 +97,11 @@ export const CreateScreen = () => {
             </TouchableOpacity>
           )}
 
-          {/* <TouchableOpacity activeOpacity={0.8} style={styles.button}>
-            <Text style={styles.btnTitle}>Опубликовать</Text>
-          </TouchableOpacity> */}
-
           <TouchableOpacity style={styles.trash}>
-            <Image source={require("../../assets/trash.png")} />
+            <Image
+              source={require("../../assets/trash.png")}
+              // style={styles.iconTrash}
+            />
           </TouchableOpacity>
         </View>
       </View>
@@ -114,6 +113,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#FFFFFF",
+    paddingTop: 44,
   },
   containerPosts: {
     paddingTop: 11,
@@ -145,6 +145,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#E8E8E8",
     marginTop: 32,
+    marginBottom: 32,
   },
   imageScreen: {
     marginTop: 90,
@@ -161,7 +162,6 @@ const styles = StyleSheet.create({
   form: {
     marginTop: 32,
     position: "relative",
-
     flex: 1,
   },
   input: {
@@ -176,7 +176,6 @@ const styles = StyleSheet.create({
   },
   inputMap: {
     height: 50,
-
     color: "#BDBDBD",
     fontSize: 16,
     fontFamily: "Roboto-Regular",
@@ -185,7 +184,6 @@ const styles = StyleSheet.create({
   mapList: {
     borderBottomColor: "#E8E8E8",
     borderBottomWidth: 1,
-    marginBottom: 16,
   },
   iconMap: {
     position: "absolute",
@@ -227,8 +225,9 @@ const styles = StyleSheet.create({
     fontFamily: "Roboto-Regular",
   },
   trash: {
-    flexDirection: "row",
-    justifyContent: "center",
+    // flex: 1,
+    alignItems: "center",
+    justifyContent: "flex-start",
   },
   map: {
     width: "100%",

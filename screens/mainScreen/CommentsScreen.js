@@ -82,6 +82,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#FFFFFF",
+    paddingTop: 44,
   },
   containerPosts: {
     paddingTop: 11,
@@ -129,6 +130,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     position: "relative",
     justifyContent: "flex-end",
+    paddingHorizontal: 16,
   },
   input: {
     height: 50,
@@ -145,8 +147,8 @@ const styles = StyleSheet.create({
   send: {
     position: "absolute",
     bottom: 8,
-    right: 40,
-    transform: [{ translateY: -8 }, { translateX: 40 }],
+    left: 145,
+    transform: [{ translateY: -8 }, { translateX: 145 }],
     padding: 8,
   },
 

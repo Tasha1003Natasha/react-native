@@ -7,7 +7,9 @@ import {
   Image,
   Dimensions,
   Text,
+  ScrollView,
 } from "react-native";
+import { Toolbar } from "../../components/Toolbar";
 
 export const ProfileScreen = () => {
   const [image, setImage] = useState(null);
@@ -60,40 +62,31 @@ export const ProfileScreen = () => {
             </View>
 
             {/* Posts */}
-            <View style={styles.containerCreateScreen}>
-              <Image source={require("../../assets/default_image.png")} />
-            </View>
-            <Text style={styles.textScreen}>Name</Text>
+            <ScrollView>
+              <View style={styles.containerCreateScreen}>
+                <Image source={require("../../assets/default_image.png")} />
+              </View>
+              <Text style={styles.textScreen}>Name</Text>
 
-            <View style={styles.containerPostScreen}>
-              <TouchableOpacity style={styles.containerComment}>
-                <Image source={require("../../assets/message_circle.png")} />
-                <Text style={styles.comment}>Number</Text>
+              <View style={styles.containerPostScreen}>
+                <TouchableOpacity style={styles.containerComment}>
+                  <Image source={require("../../assets/message_circle.png")} />
+                  <Text style={styles.comment}>Number</Text>
 
-                <Image source={require("../../assets/thumbs_up.png")} />
-                <Text style={styles.likeText}>Number</Text>
-              </TouchableOpacity>
+                  <Image source={require("../../assets/thumbs_up.png")} />
+                  <Text style={styles.likeText}>Number</Text>
+                </TouchableOpacity>
 
-              <TouchableOpacity style={styles.containerMap}>
-                <Image
-                  source={require("../../assets/map.png")}
-                  style={styles.iconMap}
-                />
-                <Text style={styles.terrainScreen}>Terrain...</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-
-          <View tyle={styles.containerToolbar}>
-            <View style={styles.postsLine} />
-            <TouchableOpacity style={styles.toolbarItems}>
-              <Image source={require("../../assets/grid.png")} />
-              <Image
-                source={require("../../assets/new.png")}
-                style={styles.toolbar}
-              />
-              <Image source={require("../../assets/user.png")} />
-            </TouchableOpacity>
+                <TouchableOpacity style={styles.containerMap}>
+                  <Image
+                    source={require("../../assets/map.png")}
+                    style={styles.iconMap}
+                  />
+                  <Text style={styles.terrainScreen}>Terrain...</Text>
+                </TouchableOpacity>
+              </View>
+            </ScrollView>
+            <Toolbar />
           </View>
         </View>
       </ImageBackground>
@@ -146,7 +139,6 @@ const styles = StyleSheet.create({
   containerCreateScreen: {
     paddingHorizontal: 16,
     marginTop: 32,
-    marginBottom: 32,
   },
   containerPostScreen: {
     flexDirection: "row",
@@ -175,6 +167,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "row",
     paddingHorizontal: 16,
+    marginBottom: 32,
   },
   comment: {
     marginLeft: 6,
@@ -203,24 +196,5 @@ const styles = StyleSheet.create({
   },
   iconMap: {
     marginRight: 3,
-  },
-  // //User
-  containerToolbar: {
-    flex: 1,
-    position: "fixed",
-  },
-  toolbarItems: {
-    alignItems: "flex-end",
-    flexDirection: "row",
-    // alignItems: "center",
-    // justifyContent: "center",
-    // justifyContent: "flex-end",
-    flexWrap: "wrap",
-    marginTop: 9,
-    marginBottom: 22,
-  },
-  toolbar: {
-    marginLeft: 31,
-    marginRight: 31,
   },
 });

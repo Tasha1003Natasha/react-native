@@ -7,6 +7,8 @@ import {
   Image,
   ScrollView,
 } from "react-native";
+// import { Posts } from "../../components/Posts";
+// import { Toolbar } from "../../components/Toolbar";
 
 export const Posts = () => {
   const [number, setNumber] = useState(0);
@@ -25,7 +27,13 @@ export const Posts = () => {
 
       <View style={styles.containerPostScreen}>
         <TouchableOpacity style={styles.containerComment} onPress={handleClick}>
-          <Image source={require("../assets/message.png")} />
+          {number ? (
+            <Image source={require("../assets/message_circle.png")} />
+          ) : (
+            <Image source={require("../assets/message.png")} />
+          )}
+
+          {/* <Image source={require("../assets/message.png")} /> */}
           <Text style={styles.comment}>{number}</Text>
         </TouchableOpacity>
 
