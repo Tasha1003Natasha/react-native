@@ -12,6 +12,8 @@ import {
 import { Toolbar } from "../../components/Toolbar";
 
 export const ProfileScreen = () => {
+  const [number, setNumber] = useState(0);
+  const handleClick = () => setNumber(number + 1);
   const [image, setImage] = useState(null);
   const addImage = () => {};
 
@@ -72,9 +74,14 @@ export const ProfileScreen = () => {
                 <TouchableOpacity style={styles.containerComment}>
                   <Image source={require("../../assets/message_circle.png")} />
                   <Text style={styles.comment}>Number</Text>
+                </TouchableOpacity>
 
+                <TouchableOpacity
+                  style={styles.containerComment}
+                  onPress={handleClick}
+                >
                   <Image source={require("../../assets/thumbs_up.png")} />
-                  <Text style={styles.likeText}>Number</Text>
+                  <Text style={styles.likeText}>{number}</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity style={styles.containerMap}>

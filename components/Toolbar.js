@@ -1,15 +1,26 @@
 import React from "react";
 import { View, StyleSheet, TouchableOpacity, Image } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 
 export const Toolbar = () => {
+  const navigation = useNavigation();
+
   return (
     <View tyle={styles.containerToolbar}>
       <View style={styles.postsLine} />
-      <TouchableOpacity style={styles.toolbarItems}>
-        <Image source={require("../assets/grid.png")} />
-        <Image source={require("../assets/new.png")} style={styles.toolbar} />
-        <Image source={require("../assets/user.png")} />
-      </TouchableOpacity>
+      <View style={styles.toolbarItems}>
+        <TouchableOpacity onPress={() => navigation.navigate("Posts")}>
+          <Image source={require("../assets/grid.png")} />
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={() => navigation.navigate("Create")}>
+          <Image source={require("../assets/new.png")} style={styles.toolbar} />
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
+          <Image source={require("../assets/user.png")} />
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };

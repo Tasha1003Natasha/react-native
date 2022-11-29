@@ -10,19 +10,17 @@ import { LoginScreen } from "./screens/auth/LoginScreen";
 import { PostsScreen } from "./screens/mainScreen/PostsScreen";
 import { ProfileScreen } from "./screens/mainScreen/ProfileScreen";
 import { CreateScreen } from "./screens/mainScreen/CreateScreen";
-import { CommentsScreen } from "./screens/mainScreen/CommentsScreen";
 import { Home } from "./screens/mainScreen/Home";
 
 // icons import
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
-import { Fontisto } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 
 export const useRoute = (isAuth) => {
   if (!isAuth) {
     return (
-      <MainStack.Navigator initialRouteName="Login">
+      <MainStack.Navigator initialRouteName="Registration">
         <MainStack.Screen
           options={{
             headerShown: false,
@@ -37,7 +35,13 @@ export const useRoute = (isAuth) => {
           name="Login"
           component={LoginScreen}
         />
-        <MainStack.Screen name="Home" component={Home} />
+        <MainStack.Screen
+          options={{
+            headerShown: false,
+          }}
+          name="Home"
+          component={Home}
+        />
       </MainStack.Navigator>
     );
   }
@@ -62,16 +66,6 @@ export const useRoute = (isAuth) => {
         }}
         name="Create"
         component={CreateScreen}
-      />
-      <MainTab.Screen
-        options={{
-          headerShown: false,
-          tabBarIcon: ({ focused, size, color }) => (
-            <Fontisto name="comments" size={size} color={color} />
-          ),
-        }}
-        name="Comments"
-        component={CommentsScreen}
       />
       <MainTab.Screen
         options={{

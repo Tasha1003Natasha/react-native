@@ -22,6 +22,14 @@ const initialState = {
 };
 
 export const RegistrationScreen = ({ navigation }) => {
+  const login = () => {
+    navigation.navigate("Login");
+  };
+
+  const home = () => {
+    navigation.navigate("Home");
+  };
+
   const [state, setState] = useState(initialState);
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
 
@@ -131,11 +139,15 @@ export const RegistrationScreen = ({ navigation }) => {
                   </Pressable>
                 </View>
 
-                <TouchableOpacity activeOpacity={0.8} style={styles.button}>
+                <TouchableOpacity
+                  onPress={home}
+                  activeOpacity={0.8}
+                  style={styles.button}
+                >
                   <Text style={styles.btnTitle}>Зарегистрироваться</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity onPress={() => navigate.navigate("Login")}>
+                <TouchableOpacity onPress={login}>
                   <Text style={styles.text}>Уже есть аккаунт? Войти</Text>
                 </TouchableOpacity>
               </View>

@@ -20,6 +20,14 @@ const initialState = {
 };
 
 export const LoginScreen = ({ navigation }) => {
+  const registration = () => {
+    navigation.navigate("Registration");
+  };
+
+  const home = () => {
+    navigation.navigate("Home");
+  };
+
   const [state, setState] = useState(initialState);
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [type, setType] = useState(false);
@@ -95,13 +103,15 @@ export const LoginScreen = ({ navigation }) => {
                     <Text style={styles.showText}>Показать</Text>
                   </Pressable>
                 </View>
-                <TouchableOpacity activeOpacity={0.8} style={styles.button}>
+                <TouchableOpacity
+                  activeOpacity={0.8}
+                  style={styles.button}
+                  onPress={home}
+                >
                   <Text style={styles.btnTitle}>Войти</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity
-                  onPress={() => navigate.navigate("Registration")}
-                >
+                <TouchableOpacity onPress={registration}>
                   <Text style={styles.text}>
                     Нет аккаунта? Зарегистрироваться
                   </Text>

@@ -11,6 +11,7 @@ import { NavigationContainer } from "@react-navigation/native";
 
 import React, { useEffect, useCallback, useState } from "react";
 import { useRoute } from "./router";
+import {} from "react-native";
 
 ///////////SplashScreen
 import { useFonts } from "expo-font";
@@ -26,64 +27,17 @@ import * as SplashScreen from "expo-splash-screen";
 //     "Roboto-Bold": require("./assets/fonts/Roboto-Bold.ttf"),
 //   });
 // };
+// const [isReady, setIsReady] = useState(false);
 
-// const MainStack = createStackNavigator();
-// const MainTab = createBottomTabNavigator();
-
-// const useRoute = (isAuth) => {
-//   if (!isAuth) {
-//     return (
-//       <MainStack.Navigator>
-//         <MainStack.Screen
-//           options={{
-//             headerShown: false,
-//           }}
-//           name="Registration"
-//           component={RegistrationScreen}
-//         />
-//         <MainStack.Screen
-//           options={{
-//             headerShown: false,
-//           }}
-//           name="Login"
-//           component={LoginScreen}
-//         />
-//       </MainStack.Navigator>
-//     );
-//   }
+// if (!isReady) {
 //   return (
-//     <MainTab.Navigator>
-//       <MainTab.Screen
-//         options={{
-//           headerShown: false,
-//         }}
-//         name="Posts"
-//         component={PostsScreen}
-//       />
-//       <MainTab.Screen
-//         options={{
-//           headerShown: false,
-//         }}
-//         name="Create"
-//         component={CreateScreen}
-//       />
-//       <MainTab.Screen
-//         options={{
-//           headerShown: false,
-//         }}
-//         name="Comments"
-//         component={CommentsScreen}
-//       />
-//       <MainTab.Screen
-//         options={{
-//           headerShown: false,
-//         }}
-//         name="Profile"
-//         component={ProfileScreen}
-//       />
-//     </MainTab.Navigator>
+//     <AppLoading
+//       startAsync={loadApplication}
+//       onFinish={() => setIsReady(true)}
+//       onError={console.warn}
+//     />
 //   );
-// };
+// }
 
 export default function App() {
   const routing = useRoute(true);
@@ -112,41 +66,9 @@ export default function App() {
   //   prepare();
   // }, []);
 
-  // const [isReady, setIsReady] = useState(false);
-
-  // if (!isReady) {
-  //   return (
-  //     <AppLoading
-  //       startAsync={loadApplication}
-  //       onFinish={() => setIsReady(true)}
-  //       onError={console.warn}
-  //     />
-  //   );
-  // }
-
   return (
     <NavigationContainer onLayout={onLayoutRootView}>
       {routing}
     </NavigationContainer>
-
-    // <NavigationContainer>{routing}</NavigationContainer>
   );
 }
-
-// auth
-/* <MainStack.Navigator>
-        <MainStack.Screen
-          options={{
-            headerShown: false,
-          }}
-          name="Registration"
-          component={RegistrationScreen}
-        />
-        <MainStack.Screen
-          options={{
-            headerShown: false,
-          }}
-          name="Login"
-          component={LoginScreen}
-        />
-      </MainStack.Navigator> */
