@@ -9,36 +9,25 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
-import { useFonts } from "expo-font";
-import * as SplashScreen from "expo-splash-screen";
-import React, { useEffect, useCallback } from "react";
-// import { View } from "react-native";
+import React, { useEffect, useCallback, useState } from "react";
+
+///////////SplashScreen
+// import { useFonts } from "expo-font";
+// import * as SplashScreen from "expo-splash-screen";
+
+//  AppLoading
+import AppLoading from "expo-app-loading";
+import * as Font from "expo-font";
+const loadApplication = async () => {
+  await Font.loadAsync({
+    "Roboto-Regular": require("./assets/fonts/Roboto-Regular.ttf"),
+    "Roboto-Medium": require("./assets/fonts/Roboto-Medium.ttf"),
+    "Roboto-Bold": require("./assets/fonts/Roboto-Bold.ttf"),
+  });
+};
 
 const MainStack = createStackNavigator();
 const MainTab = createBottomTabNavigator();
-
-const [fontsLoaded] = useFonts({
-  "Roboto-Regular": require("./assets/fonts/Roboto-Regular.ttf"),
-  "Roboto-Medium": require("./assets/fonts/Roboto-Medium.ttf"),
-  "Roboto-Bold": require("./assets/fonts/Roboto-Bold.ttf"),
-});
-
-// useEffect(() => {
-//   async function prepare() {
-//     await SplashScreen.preventAutoHideAsync();
-//   }
-//   prepare();
-// }, []);
-
-const onLayoutRootView = useCallback(async () => {
-  if (fontsLoaded) {
-    await SplashScreen.hideAsync();
-  }
-}, [fontsLoaded]);
-
-// if (!fontsLoaded) {
-//   return null;
-// }
 
 const useRoute = (isAuth) => {
   if (!isAuth) {
@@ -64,30 +53,30 @@ const useRoute = (isAuth) => {
   return (
     <MainTab.Navigator>
       <MainTab.Screen
-        // options={{
-        //   headerShown: false,
-        // }}
+        options={{
+          headerShown: false,
+        }}
         name="Posts"
         component={PostsScreen}
       />
       <MainTab.Screen
-        // options={{
-        //   headerShown: false,
-        // }}
+        options={{
+          headerShown: false,
+        }}
         name="Create"
         component={CreateScreen}
       />
       <MainTab.Screen
-        // options={{
-        //   headerShown: false,
-        // }}
+        options={{
+          headerShown: false,
+        }}
         name="Comments"
         component={CommentsScreen}
       />
       <MainTab.Screen
-        // options={{
-        //   headerShown: false,
-        // }}
+        options={{
+          headerShown: false,
+        }}
         name="Profile"
         component={ProfileScreen}
       />
@@ -98,10 +87,48 @@ const useRoute = (isAuth) => {
 export default function App() {
   const routing = useRoute({});
 
+  ///////////SplashScreen
+  // const [fontsLoaded] = useFonts({
+  //   "Roboto-Regular": require("./assets/fonts/Roboto-Regular.ttf"),
+  //   "Roboto-Medium": require("./assets/fonts/Roboto-Medium.ttf"),
+  //   "Roboto-Bold": require("./assets/fonts/Roboto-Bold.ttf"),
+  // });
+
+  // const onLayoutRootView = useCallback(async () => {
+  //   if (fontsLoaded) {
+  //     await SplashScreen.hideAsync();
+  //   }
+  // }, [fontsLoaded]);
+
+  // if (!fontsLoaded) {
+  //   return null;
+  // }
+
+  // useEffect(() => {
+  //   async function prepare() {
+  //     await SplashScreen.preventAutoHideAsync();
+  //   }
+  //   prepare();
+  // }, []);
+
+  const [isReady, setIsReady] = useState(false);
+
+  if (!isReady) {
+    return (
+      <AppLoading
+        startAsync={loadApplication}
+        onFinish={() => setIsReady(true)}
+        onError={console.warn}
+      />
+    );
+  }
+
   return (
-    <NavigationContainer onLayout={onLayoutRootView}>
-      {routing}
-    </NavigationContainer>
+    // <NavigationContainer onLayout={onLayoutRootView}>
+    //   {routing}
+    // </NavigationContainer>
+
+    <NavigationContainer>{routing}</NavigationContainer>
   );
 }
 

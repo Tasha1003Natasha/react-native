@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Image,
   ImageBackground,
+  ScrollView,
 } from "react-native";
 
 export const PostsScreen = () => {
@@ -87,6 +88,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#FFFFFF",
     position: "relative",
+    paddingTop: 44,
   },
   containerPosts: {
     paddingTop: 11,
@@ -114,6 +116,7 @@ const styles = StyleSheet.create({
   ////////Posts/////////
   section: {
     flex: 1,
+    paddingHorizontal: 16,
   },
   containerImage: {
     flexDirection: "row",
@@ -126,6 +129,7 @@ const styles = StyleSheet.create({
     marginLeft: 16,
   },
   containerUser: {
+    alignItems: "center",
     marginLeft: 8,
     marginTop: 48,
   },
@@ -146,17 +150,16 @@ const styles = StyleSheet.create({
   },
   containerScreen: {
     height: 240,
+    width: 343,
     backgroundColor: "#F6F6F6",
     borderRadius: 8,
     borderWidth: 1,
     borderColor: "#E8E8E8",
     alignItems: "center",
-    justifyContent: "flex-start",
   },
   containerPostScreen: {
     flexDirection: "row",
     marginTop: 10,
-    // alignItems: "center",
   },
   textScreen: {
     color: "#212121",
