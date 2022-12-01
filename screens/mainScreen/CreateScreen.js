@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -10,6 +10,8 @@ import {
 } from "react-native";
 import MapView from "react-native-maps";
 import { useNavigation } from "@react-navigation/native";
+import { Camera } from "expo-camera";
+import * as MediaLibrary from "expo-media-library";
 
 const initialState = {
   name: "",
@@ -19,8 +21,41 @@ const initialState = {
 export const CreateScreen = () => {
   const navigation = useNavigation();
   const [state, setState] = useState(initialState);
+  const [camera, setCamera] = useState(null);
+  const [photo, setPhoto] = useState(null);
+  const [hasCameraPermission, setHasCameraPermission] = useState(null);
+
+  // For open camera
+  const [type, setType] = useState(Camera.Constants.Type.back);
+  const [openCamera, setOpenCamera] = useState(false);
+  const handlerCamera = () => {
+    setOpenCamera(true);
+  };
+
+  // image
   const [image, setImage] = useState(null);
   const addImage = () => {};
+
+  useEffect(() => {
+    (async () => {
+      const { status } = await Camera.requestCameraPermissionsAsync();
+      await MediaLibrary.requestPermissionsAsync();
+      setHasCameraPermission(status === "granted");
+    })();
+  }, []);
+
+  const takePhoto = async () => {
+    if (camera) {
+      const photo = await camera.takePictureAsync();
+      // await MediaLibrary.createAssetAsync(uri);
+      setPhoto(photo.uri);
+      // console.log("photo", photo);
+    }
+  };
+
+  if (hasCameraPermission === false) {
+    return <Text>No access to camera</Text>;
+  }
 
   return (
     <View style={styles.container}>
@@ -36,26 +71,56 @@ export const CreateScreen = () => {
       </TouchableOpacity>
       <View style={styles.postsLine} />
 
-      <View style={styles.containerCreateScreen}>
-        <TouchableOpacity style={styles.containerScreen} onPress={addImage}>
-          {image ? (
-            <Image
-              source={{ uri: image }}
-              style={{ width: 343, height: 240 }}
-            />
-          ) : (
+      {/* /////////Screen */}
+      {!openCamera ? (
+        <View style={styles.containerCreateScreen}>
+          <TouchableOpacity
+            style={styles.containerScreen}
+            onPress={handlerCamera}
+          >
             <Image
               source={require("../../assets/icon_screen.png")}
               style={styles.imageScreen}
             />
-          )}
-          {/* <Image
-            source={require("../../assets/icon_screen.png")}
-            style={styles.imageScreen}
-          /> */}
-          {/* <Text style={styles.textScreen}>Загрузите фото</Text> */}
+          </TouchableOpacity>
+        </View>
+      ) : (
+        <View style={styles.containerCamera}>
+          <Camera
+            style={styles.cameraScreen}
+            type={type}
+            ref={(ref) => setCamera(ref)}
+          >
+            {!photo ? (
+              <TouchableOpacity onPress={takePhoto}>
+                <Image
+                  source={require("../../assets/icon_screen.png")}
+                  style={styles.imageScreen}
+                />
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity
+                onPress={() => {
+                  setType(
+                    type === Camera.Constants.Type.back
+                      ? Camera.Constants.Type.front
+                      : Camera.Constants.Type.back
+                  );
+                }}
+              >
+                <Image
+                  source={{ uri: photo }}
+                  style={{ width: 343, height: 240 }}
+                />
+              </TouchableOpacity>
+            )}
+          </Camera>
+        </View>
+      )}
 
-          {image ? (
+      <View style={styles.section}>
+        <TouchableOpacity onPress={addImage}>
+          {photo ? (
             <Text style={styles.textScreen}>Редактировать фото</Text>
           ) : (
             <Text style={styles.textScreen}>Загрузите фото</Text>
@@ -115,6 +180,7 @@ export const CreateScreen = () => {
 };
 
 const styles = StyleSheet.create({
+  // /////////////////////
   container: {
     flex: 1,
     backgroundColor: "#FFFFFF",
@@ -139,19 +205,35 @@ const styles = StyleSheet.create({
     marginLeft: 16,
     marginRight: 58,
   },
+  section: {
+    paddingHorizontal: 16,
+  },
   containerCreateScreen: {
     paddingHorizontal: 16,
+    alignItems: "center",
   },
   containerScreen: {
     height: 240,
-    // width: 343,
+    width: 343,
     backgroundColor: "#F6F6F6",
     borderRadius: 8,
     borderWidth: 1,
     borderColor: "#E8E8E8",
     marginTop: 32,
-    marginBottom: 32,
+    marginBottom: 8,
   },
+  // camera
+  containerCamera: {
+    paddingHorizontal: 16,
+    alignItems: "center",
+  },
+  cameraScreen: {
+    height: 240,
+    width: 343,
+    marginTop: 32,
+    marginBottom: 8,
+  },
+  // //////////////
   imageScreen: {
     marginTop: 90,
     marginBottom: 90,

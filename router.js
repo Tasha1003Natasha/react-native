@@ -19,7 +19,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 
 export const useRoute = (isAuth) => {
-  if (isAuth) {
+  if (!isAuth) {
     return (
       <MainStack.Navigator initialRouteName="Registration">
         <MainStack.Screen
