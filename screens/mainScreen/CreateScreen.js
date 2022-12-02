@@ -32,6 +32,9 @@ export const CreateScreen = () => {
     setOpenCamera(true);
   };
 
+  const closeCamera = () => {
+    setOpenCamera(false);
+  };
   // image
   const [image, setImage] = useState(null);
   const addImage = () => {};
@@ -66,7 +69,9 @@ export const CreateScreen = () => {
     <View style={styles.container}>
       <TouchableOpacity
         style={styles.containerPosts}
-        onPress={() => navigation.navigate("Posts")}
+        onPress={() => {
+          closeCamera(), navigation.navigate("Posts");
+        }}
       >
         <Image
           source={require("../../assets/arrow_left.png")}
@@ -230,7 +235,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   containerCreateScreen: {
-    // marginHorizontal: 16,
     alignItems: "center",
     justifyContent: "center",
     height: 240,
@@ -254,16 +258,17 @@ const styles = StyleSheet.create({
   },
   // camera
   containerCamera: {
-    paddingHorizontal: 16,
     alignItems: "center",
+    marginTop: 32,
+    marginBottom: 8,
+
+    borderWidth: 4,
+    borderColor: "#000000",
+    borderRadius: 8,
   },
   camera: {
     height: 240,
     width: 343,
-    marginTop: 32,
-    marginBottom: 8,
-    overflow: "hidden",
-    borderRadius: 8,
   },
   containerIconScreen: {
     marginTop: 50,
