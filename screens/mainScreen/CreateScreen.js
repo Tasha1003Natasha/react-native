@@ -53,6 +53,11 @@ export const CreateScreen = () => {
     }
   };
 
+  const sendPhoto = () => {
+    // console.log("navigation", navigation);
+    navigation.navigate("Posts", { photo });
+  };
+
   if (hasCameraPermission === false) {
     return <Text>No access to camera</Text>;
   }
@@ -72,51 +77,63 @@ export const CreateScreen = () => {
       <View style={styles.postsLine} />
 
       {/* /////////Screen */}
-      {!openCamera ? (
-        <View style={styles.containerCreateScreen}>
-          <TouchableOpacity
-            style={styles.containerScreen}
-            onPress={handlerCamera}
-          >
-            <Image
-              source={require("../../assets/icon_screen.png")}
-              style={styles.imageScreen}
-            />
-          </TouchableOpacity>
-        </View>
-      ) : (
-        <View style={styles.containerCamera}>
-          <Camera
-            style={styles.cameraScreen}
-            type={type}
-            ref={(ref) => setCamera(ref)}
-          >
-            {!photo ? (
-              <TouchableOpacity onPress={takePhoto}>
-                <Image
-                  source={require("../../assets/icon_screen.png")}
-                  style={styles.imageScreen}
-                />
-              </TouchableOpacity>
-            ) : (
-              <TouchableOpacity
-                onPress={() => {
-                  setType(
-                    type === Camera.Constants.Type.back
-                      ? Camera.Constants.Type.front
-                      : Camera.Constants.Type.back
-                  );
-                }}
-              >
-                <Image
-                  source={{ uri: photo }}
-                  style={{ width: 343, height: 240 }}
-                />
-              </TouchableOpacity>
-            )}
-          </Camera>
-        </View>
-      )}
+      <View style={styles.sectionCamera}>
+        {!openCamera ? (
+          <View style={styles.containerCreateScreen}>
+            <TouchableOpacity
+              style={styles.containerIcon}
+              onPress={handlerCamera}
+            >
+              <Image source={require("../../assets/icon_foto.png")} />
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <View style={styles.containerCamera}>
+            <Camera
+              style={styles.camera}
+              type={type}
+              ref={(ref) => setCamera(ref)}
+            >
+              <View style={styles.sectionFoto}>
+                <TouchableOpacity
+                  style={styles.containerFrontal}
+                  onPress={() => {
+                    setType(
+                      type === Camera.Constants.Type.back
+                        ? Camera.Constants.Type.front
+                        : Camera.Constants.Type.back
+                    );
+                  }}
+                >
+                  <Image
+                    source={require("../../assets/frontal_icon.png")}
+                    style={{
+                      width: 24,
+                      height: 24,
+                    }}
+                  />
+                </TouchableOpacity>
+
+                {/* /////////////////////takePhoto//////////////////////////////////// */}
+                <TouchableOpacity
+                  style={styles.containerIconScreen}
+                  onPress={!photo ? takePhoto : sendPhoto}
+                >
+                  <Image
+                    source={
+                      !photo
+                        ? require("../../assets/icon_foto.png")
+                        : require("../../assets/send_foto.png")
+                    }
+                    style={{ width: 24, height: 24 }}
+                  />
+                </TouchableOpacity>
+                {/* /////////////////////sendPhoto//////////////////////////////////// */}
+              </View>
+            </Camera>
+          </View>
+        )}
+      </View>
 
       <View style={styles.section}>
         <TouchableOpacity onPress={addImage}>
@@ -208,11 +225,14 @@ const styles = StyleSheet.create({
   section: {
     paddingHorizontal: 16,
   },
-  containerCreateScreen: {
+  sectionCamera: {
     paddingHorizontal: 16,
     alignItems: "center",
   },
-  containerScreen: {
+  containerCreateScreen: {
+    // marginHorizontal: 16,
+    alignItems: "center",
+    justifyContent: "center",
     height: 240,
     width: 343,
     backgroundColor: "#F6F6F6",
@@ -222,24 +242,58 @@ const styles = StyleSheet.create({
     marginTop: 32,
     marginBottom: 8,
   },
+  containerIcon: {
+    height: 60,
+    width: 60,
+    backgroundColor: "#FFFFFF",
+    borderRadius: 50,
+    borderWidth: 1,
+    borderColor: "#E8E8E8",
+    justifyContent: "center",
+    alignItems: "center",
+  },
   // camera
   containerCamera: {
     paddingHorizontal: 16,
     alignItems: "center",
   },
-  cameraScreen: {
+  camera: {
     height: 240,
     width: 343,
     marginTop: 32,
     marginBottom: 8,
+    overflow: "hidden",
+    borderRadius: 8,
+  },
+  containerIconScreen: {
+    marginTop: 50,
+    height: 50,
+    width: 50,
+    backgroundColor: "#FFFFFF",
+    borderRadius: 50,
+    borderWidth: 1,
+    borderColor: "#E8E8E8",
+    justifyContent: "center",
+    alignItems: "center",
+    opacity: 0.5,
+  },
+  sectionFoto: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  containerFrontal: {
+    height: 40,
+    width: 40,
+    backgroundColor: "#FFFFFF",
+    borderRadius: 50,
+    borderColor: "#E8E8E8",
+    justifyContent: "center",
+    alignItems: "center",
+
+    marginTop: 10,
+    opacity: 0.5,
   },
   // //////////////
-  imageScreen: {
-    marginTop: 90,
-    marginBottom: 90,
-    marginLeft: 141,
-    marginRight: 141,
-  },
   textScreen: {
     color: "#BDBDBD",
     marginTop: 8,
