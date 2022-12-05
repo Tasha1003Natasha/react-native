@@ -10,7 +10,17 @@ import {
 import { Posts } from "../../components/Posts";
 import { Toolbar } from "../../components/Toolbar";
 
-export const PostsScreen = () => {
+export const PostsScreen = ({ route }) => {
+  const [posts, setPosts] = useState([]);
+  console.log("route.params", route.params);
+
+  useEffect(() => {
+    if (route.params) {
+      setPosts((prevState) => [...prevState, route.params]);
+    }
+  }, [route.params]);
+  console.log("posts", posts);
+
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.containerPosts}>

@@ -12,6 +12,7 @@ import MapView from "react-native-maps";
 import { useNavigation } from "@react-navigation/native";
 import { Camera } from "expo-camera";
 import * as MediaLibrary from "expo-media-library";
+import { useIsFocused } from "@react-navigation/native";
 
 const initialState = {
   name: "",
@@ -21,17 +22,20 @@ const initialState = {
 export const CreateScreen = () => {
   const navigation = useNavigation();
   const [state, setState] = useState(initialState);
+
   const [camera, setCamera] = useState(null);
   const [photo, setPhoto] = useState(null);
   const [hasCameraPermission, setHasCameraPermission] = useState(null);
 
-  // For open camera
+  // For open/close camera
   const [type, setType] = useState(Camera.Constants.Type.back);
   const [openCamera, setOpenCamera] = useState(false);
+  ///////////////useIsFocused /////////////////
+  const isFocused = useIsFocused();
+
   const handlerCamera = () => {
     setOpenCamera(true);
   };
-
   const closeCamera = () => {
     setOpenCamera(false);
   };
@@ -48,22 +52,17 @@ export const CreateScreen = () => {
   }, []);
 
   const takePhoto = async () => {
-    if (camera) {
-      const photo = await camera.takePictureAsync();
-      // await MediaLibrary.createAssetAsync(uri);
-      setPhoto(photo.uri);
-      // console.log("photo", photo);
-    }
+    const photo = await camera.takePictureAsync();
+    // await MediaLibrary.createAssetAsync(photo.uri);
+    setPhoto(photo.uri);
+    console.log("photo", photo);
   };
 
   const sendPhoto = () => {
     // console.log("navigation", navigation);
     navigation.navigate("Posts", { photo });
+    setPhoto(null);
   };
-
-  if (hasCameraPermission === false) {
-    return <Text>No access to camera</Text>;
-  }
 
   return (
     <View style={styles.container}>
@@ -94,48 +93,50 @@ export const CreateScreen = () => {
           </View>
         ) : (
           <View style={styles.containerCamera}>
-            <Camera
-              style={styles.camera}
-              type={type}
-              ref={(ref) => setCamera(ref)}
-            >
-              <View style={styles.sectionFoto}>
-                <TouchableOpacity
-                  style={styles.containerFrontal}
-                  onPress={() => {
-                    setType(
-                      type === Camera.Constants.Type.back
-                        ? Camera.Constants.Type.front
-                        : Camera.Constants.Type.back
-                    );
-                  }}
-                >
-                  <Image
-                    source={require("../../assets/frontal_icon.png")}
-                    style={{
-                      width: 24,
-                      height: 24,
+            {isFocused && (
+              <Camera
+                style={styles.camera}
+                type={type}
+                ref={(ref) => setCamera(ref)}
+              >
+                <View style={styles.sectionFoto}>
+                  <TouchableOpacity
+                    style={styles.containerFrontal}
+                    onPress={() => {
+                      setType(
+                        type === Camera.Constants.Type.back
+                          ? Camera.Constants.Type.front
+                          : Camera.Constants.Type.back
+                      );
                     }}
-                  />
-                </TouchableOpacity>
+                  >
+                    <Image
+                      source={require("../../assets/frontal_icon.png")}
+                      style={{
+                        width: 24,
+                        height: 24,
+                      }}
+                    />
+                  </TouchableOpacity>
 
-                {/* /////////////////////takePhoto//////////////////////////////////// */}
-                <TouchableOpacity
-                  style={styles.containerIconScreen}
-                  onPress={!photo ? takePhoto : sendPhoto}
-                >
-                  <Image
-                    source={
-                      !photo
-                        ? require("../../assets/icon_foto.png")
-                        : require("../../assets/send_foto.png")
-                    }
-                    style={{ width: 24, height: 24 }}
-                  />
-                </TouchableOpacity>
-                {/* /////////////////////sendPhoto//////////////////////////////////// */}
-              </View>
-            </Camera>
+                  {/* /////////////////////takePhoto//////////////////////////////////// */}
+                  <TouchableOpacity
+                    style={styles.containerIconScreen}
+                    onPress={!photo ? takePhoto : sendPhoto}
+                  >
+                    <Image
+                      source={
+                        !photo
+                          ? require("../../assets/icon_foto.png")
+                          : require("../../assets/send_foto.png")
+                      }
+                      style={{ width: 24, height: 24 }}
+                    />
+                  </TouchableOpacity>
+                  {/* /////////////////////sendPhoto//////////////////////////////////// */}
+                </View>
+              </Camera>
+            )}
           </View>
         )}
       </View>
