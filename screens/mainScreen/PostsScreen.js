@@ -6,20 +6,24 @@ import {
   TouchableOpacity,
   Image,
   ImageBackground,
+  FlatList,
 } from "react-native";
 import { Posts } from "../../components/Posts";
 import { Toolbar } from "../../components/Toolbar";
 
+import { useNavigation } from "@react-navigation/native";
+
 export const PostsScreen = ({ route }) => {
   const [posts, setPosts] = useState([]);
-  console.log("route.params", route.params);
+  // console.log("route.params", route.params);
+  const navigation = useNavigation();
 
   useEffect(() => {
     if (route.params) {
       setPosts((prevState) => [...prevState, route.params]);
     }
   }, [route.params]);
-  console.log("posts", posts);
+  // console.log("posts", posts);
 
   return (
     <View style={styles.container}>
@@ -46,10 +50,27 @@ export const PostsScreen = ({ route }) => {
         </View>
       </View>
 
+      {/* <FlatList
+        data={posts}
+        // keyExtractor={(item, indx) => indx.toString()}
+        renderItem={({ item }) => (
+          <View style={styles.post}>
+            <Image source={{ uri: item.photo }} />
+          </View>
+        )}
+      /> */}
+
       <View style={styles.post}>
-        {/* Posts */}
-        <Posts />
+        <FlatList
+          data={posts}
+          keyExtractor={(item, indx) => indx.toString()}
+          renderItem={({ item }) => <Posts item={item} />}
+        />
       </View>
+      {/* 
+      <View style={styles.post}>
+        <Posts posts={posts} />
+      </View> */}
 
       <Toolbar />
     </View>

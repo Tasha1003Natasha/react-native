@@ -55,7 +55,7 @@ export const CreateScreen = () => {
     const photo = await camera.takePictureAsync();
     // await MediaLibrary.createAssetAsync(photo.uri);
     setPhoto(photo.uri);
-    console.log("photo", photo);
+    // console.log("photo", photo);
   };
 
   const sendPhoto = () => {
@@ -69,7 +69,7 @@ export const CreateScreen = () => {
       <TouchableOpacity
         style={styles.containerPosts}
         onPress={() => {
-          closeCamera(), navigation.navigate("Posts");
+          closeCamera(), navigation.goBack();
         }}
       >
         <Image

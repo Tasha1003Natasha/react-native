@@ -5,26 +5,40 @@ import {
   StyleSheet,
   TouchableOpacity,
   Image,
-  ScrollView,
+  FlatList,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
-export const Posts = () => {
+export const Posts = ({ item }) => {
   const navigation = useNavigation();
-
   const [number, setNumber] = useState(0);
   const handleClick = () => setNumber(number + 1);
 
+  //   <FlatList
+  //   data={posts}
+  //   // keyExtractor={(item, indx) => indx.toString()}
+  //   renderItem={({ item }) => (
+  //     <View style={styles.post}>
+  //       <Image source={{ uri: item.photo }} />
+  //     </View>
+  //   )}
+  // />
+
   return (
-    <ScrollView style={styles.containerCreateScreen}>
-      <TouchableOpacity style={styles.containerScreen}>
-        <Image
+    <View style={styles.containerCreateScreen} key={item}>
+      {/* ////закінчила на рендері колекції */}
+      {/* <Image
           source={require("../assets/default_image.png")}
           style={styles.imageScreen}
-        />
-      </TouchableOpacity>
+        /> */}
 
-      <Text style={styles.textScreen}>Name</Text>
+      <Image source={{ uri: item.photo }} style={styles.imageScreen} />
+
+      <Text style={styles.textScreen}>
+        {/* {item.name != null ? item.name : ""} */}
+        Name
+      </Text>
+      {/* <Text style={styles.textScreen}>Name</Text> */}
 
       <View style={styles.containerPostScreen}>
         <TouchableOpacity
@@ -45,7 +59,7 @@ export const Posts = () => {
           <Text style={styles.terrainScreen}>Terrain...</Text>
         </TouchableOpacity>
       </View>
-    </ScrollView>
+    </View>
   );
 };
 
@@ -54,10 +68,9 @@ const styles = StyleSheet.create({
   containerCreateScreen: {
     marginTop: 32,
   },
-  containerScreen: {
+  imageScreen: {
     height: 240,
     width: 343,
-    backgroundColor: "#F6F6F6",
     borderRadius: 8,
     borderWidth: 1,
     borderColor: "#E8E8E8",
@@ -66,6 +79,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     marginTop: 10,
   },
+
   textScreen: {
     color: "#212121",
     marginTop: 8,
