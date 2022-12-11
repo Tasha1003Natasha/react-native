@@ -129,19 +129,11 @@ export const CreateScreen = ({ navigation }) => {
                   ref={(ref) => setCamera(ref)}
                 >
                   <View style={styles.sectionFoto}>
-                    {photo && (
-                      <Image
-                        source={{ uri: photo }}
-                        style={styles.imagePhoto}
-                      />
-                      // <Image
-                      //   source={openCamera ? { uri: photo } : { uri: null }}
-                      //   style={
-                      //     openCamera ? styles.imagePhoto : styles.imageHidden
-                      //   }
-                      // />
-                      ////////////Не оновлює фото камера/////////////////
-                    )}
+                    <Image
+                      source={photo ? { uri: photo } : { uri: null }}
+                      style={photo ? styles.imagePhoto : styles.imageHidden}
+                    />
+
                     <TouchableOpacity
                       style={!photo && styles.containerFrontal}
                       onPress={() => {
@@ -180,21 +172,21 @@ export const CreateScreen = ({ navigation }) => {
         </View>
 
         <View style={styles.section}>
-          {/* <TouchableOpacity onPress={photo ? retakePhoto : sendPhoto}>
-          {photo ? (
-            <Text style={styles.textScreen}>Редактировать фото</Text>
-          ) : (
-            <Text style={styles.textScreen}>Загрузите фото</Text>
-          )}
-        </TouchableOpacity> */}
-
-          <TouchableOpacity onPress={addImage}>
-            {image ? (
+          <TouchableOpacity onPress={photo ? retakePhoto : sendPhoto}>
+            {photo ? (
               <Text style={styles.textScreen}>Редактировать фото</Text>
             ) : (
               <Text style={styles.textScreen}>Загрузите фото</Text>
             )}
           </TouchableOpacity>
+
+          {/* <TouchableOpacity onPress={addImage}>
+            {image ? (
+              <Text style={styles.textScreen}>Редактировать фото</Text>
+            ) : (
+              <Text style={styles.textScreen}>Загрузите фото</Text>
+            )}
+          </TouchableOpacity> */}
 
           <KeyboardAvoidingView
             behavior={Platform.OS == "ios" ? "padding" : "height"}
@@ -232,9 +224,6 @@ export const CreateScreen = ({ navigation }) => {
                 <Image
                   source={require("../../assets/map.png")}
                   style={styles.iconMap}
-                  ///////////Навігація не працює //////////////////////
-                  // onPress={map}
-                  // Закінчила Потім внести розміри для клавіату
                 />
               </TouchableOpacity>
 
