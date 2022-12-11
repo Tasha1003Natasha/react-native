@@ -1,12 +1,5 @@
 import React, { useState } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  Image,
-  FlatList,
-} from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
 export const Posts = ({ item }) => {
@@ -14,31 +7,15 @@ export const Posts = ({ item }) => {
   const [number, setNumber] = useState(0);
   const handleClick = () => setNumber(number + 1);
 
-  //   <FlatList
-  //   data={posts}
-  //   // keyExtractor={(item, indx) => indx.toString()}
-  //   renderItem={({ item }) => (
-  //     <View style={styles.post}>
-  //       <Image source={{ uri: item.photo }} />
-  //     </View>
-  //   )}
-  // />
-
   return (
     <View style={styles.containerCreateScreen} key={item}>
-      {/* ////закінчила на рендері колекції */}
       {/* <Image
           source={require("../assets/default_image.png")}
           style={styles.imageScreen}
         /> */}
-
       <Image source={{ uri: item.photo }} style={styles.imageScreen} />
 
-      <Text style={styles.textScreen}>
-        {/* {item.name != null ? item.name : ""} */}
-        Name
-      </Text>
-      {/* <Text style={styles.textScreen}>Name</Text> */}
+      <Text style={styles.textScreen}>{item.name ? item.name : "Name"}</Text>
 
       <View style={styles.containerPostScreen}>
         <TouchableOpacity
@@ -54,9 +31,16 @@ export const Posts = ({ item }) => {
           <Text style={styles.comment}>{number}</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.containerMap}>
+        <TouchableOpacity
+          style={styles.containerMap}
+          onPress={() => {
+            navigation.navigate("Map");
+          }}
+        >
           <Image source={require("../assets/map.png")} style={styles.iconMap} />
-          <Text style={styles.terrainScreen}>Terrain...</Text>
+          <Text style={styles.terrainScreen}>
+            {item.terrain ? item.terrain : "Terrain.."}
+          </Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -66,7 +50,7 @@ export const Posts = ({ item }) => {
 const styles = StyleSheet.create({
   // Image
   containerCreateScreen: {
-    marginTop: 32,
+    marginTop: 22,
   },
   imageScreen: {
     height: 240,

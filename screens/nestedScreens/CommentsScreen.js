@@ -27,16 +27,18 @@ export const CommentsScreen = () => {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity
+      <View
         style={styles.containerPosts}
-        onPress={() => navigation.navigate("Posts")}
       >
-        <Image
-          source={require("../../assets/arrow_left.png")}
-          style={styles.iconLeft}
-        />
+        <TouchableOpacity onPress={() => navigation.navigate("DefaultScreen")}>
+          <Image
+            source={require("../../assets/arrow_left.png")}
+            style={styles.iconLeft}
+          />
+        </TouchableOpacity>
         <Text style={styles.postsText}>Комментарии</Text>
-      </TouchableOpacity>
+      </View>
+
       <View style={styles.postsLine} />
       <View style={styles.containerCreateScreen}>
         <TouchableOpacity style={styles.containerScreen} onPress={addImage}>

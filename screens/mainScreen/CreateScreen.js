@@ -6,199 +6,265 @@ import {
   TouchableOpacity,
   Image,
   TextInput,
-  Pressable,
+  KeyboardAvoidingView,
+  TouchableWithoutFeedback,
+  Keyboard,
+  ScrollView,
 } from "react-native";
-import MapView from "react-native-maps";
-import { useNavigation } from "@react-navigation/native";
+// import { useNavigation } from "@react-navigation/native";
 import { Camera } from "expo-camera";
 import * as MediaLibrary from "expo-media-library";
 import { useIsFocused } from "@react-navigation/native";
+import * as Location from "expo-location";
 
 const initialState = {
   name: "",
   terrain: "",
 };
 
-export const CreateScreen = () => {
-  const navigation = useNavigation();
-  const [state, setState] = useState(initialState);
+export const CreateScreen = ({ navigation }) => {
+  const map = () => {
+    navigation.navigate("Map");
+  };
 
+  const [state, setState] = useState(initialState);
   const [camera, setCamera] = useState(null);
   const [photo, setPhoto] = useState(null);
   const [hasCameraPermission, setHasCameraPermission] = useState(null);
-
   // For open/close camera
   const [type, setType] = useState(Camera.Constants.Type.back);
   const [openCamera, setOpenCamera] = useState(false);
   ///////////////useIsFocused /////////////////
   const isFocused = useIsFocused();
-
-  const handlerCamera = () => {
-    setOpenCamera(true);
-  };
-  const closeCamera = () => {
-    setOpenCamera(false);
-  };
+  //////////////disabled//////////////////
+  const [isDisabled, setIsDisabled] = useState(false);
   // image
   const [image, setImage] = useState(null);
   const addImage = () => {};
+  //////////////Keyboard/////////////////
+  const [isShowKeyboard, setIsShowKeyboard] = useState(false);
 
   useEffect(() => {
     (async () => {
-      const { status } = await Camera.requestCameraPermissionsAsync();
+      const cameraStatus = await Camera.requestCameraPermissionsAsync();
       await MediaLibrary.requestPermissionsAsync();
-      setHasCameraPermission(status === "granted");
+      setHasCameraPermission(cameraStatus.status === "granted");
+
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        setErrorMsg("Permission to access location was denied");
+        return;
+      }
     })();
   }, []);
 
+  const handlerCamera = async () => {
+    setOpenCamera(true);
+  };
+
+  const closeCamera = async () => {
+    setOpenCamera(false);
+  };
+
   const takePhoto = async () => {
     const photo = await camera.takePictureAsync();
-    // await MediaLibrary.createAssetAsync(photo.uri);
+    const location = await Location.getCurrentPositionAsync();
+    console.log("latitude", location.coords.latitude);
+    console.log("longitude", location.coords.longitude);
     setPhoto(photo.uri);
     // console.log("photo", photo);
   };
 
-  const sendPhoto = () => {
+  const sendPhoto = async () => {
     // console.log("navigation", navigation);
-    navigation.navigate("Posts", { photo });
+    navigation.navigate("DefaultScreen", { photo });
     setPhoto(null);
+    setState("");
+    setIsDisabled(false);
+  };
+
+  const retakePhoto = async () => {
+    setPhoto(null);
+    setOpenCamera(true);
+    setState("");
+    setIsDisabled(false);
+    setCamera(null);
   };
 
   return (
-    <View style={styles.container}>
-      <TouchableOpacity
-        style={styles.containerPosts}
-        onPress={() => {
-          closeCamera(), navigation.goBack();
-        }}
-      >
-        <Image
-          source={require("../../assets/arrow_left.png")}
-          style={styles.iconLeft}
-        />
-        <Text style={styles.postsText}>Создать публикацию</Text>
-      </TouchableOpacity>
-      <View style={styles.postsLine} />
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <ScrollView style={styles.container}>
+        <View style={styles.containerPosts}>
+          <TouchableOpacity
+            onPress={() => {
+              closeCamera(), navigation.navigate("Posts");
+            }}
+          >
+            <Image
+              source={require("../../assets/arrow_left.png")}
+              style={styles.iconLeft}
+            />
+          </TouchableOpacity>
+          <Text style={styles.postsText}>Создать публикацию</Text>
+        </View>
+        <View style={styles.postsLine} />
 
-      {/* /////////Screen */}
-      <View style={styles.sectionCamera}>
-        {!openCamera ? (
-          <View style={styles.containerCreateScreen}>
-            <TouchableOpacity
-              style={styles.containerIcon}
-              onPress={handlerCamera}
-            >
-              <Image source={require("../../assets/icon_foto.png")} />
-            </TouchableOpacity>
-          </View>
-        ) : (
-          <View style={styles.containerCamera}>
-            {isFocused && (
-              <Camera
-                style={styles.camera}
-                type={type}
-                ref={(ref) => setCamera(ref)}
+        {/* /////////Screen */}
+        <View style={styles.sectionCamera}>
+          {!openCamera ? (
+            <View style={styles.containerCreateScreen}>
+              <TouchableOpacity
+                style={styles.containerIcon}
+                onPress={handlerCamera}
               >
-                <View style={styles.sectionFoto}>
-                  <TouchableOpacity
-                    style={styles.containerFrontal}
-                    onPress={() => {
-                      setType(
-                        type === Camera.Constants.Type.back
-                          ? Camera.Constants.Type.front
-                          : Camera.Constants.Type.back
-                      );
-                    }}
-                  >
-                    <Image
-                      source={require("../../assets/frontal_icon.png")}
-                      style={{
-                        width: 24,
-                        height: 24,
+                <Image source={require("../../assets/icon_foto.png")} />
+              </TouchableOpacity>
+            </View>
+          ) : (
+            <View style={styles.containerCamera}>
+              {isFocused && (
+                <Camera
+                  style={styles.camera}
+                  type={type}
+                  ref={(ref) => setCamera(ref)}
+                >
+                  <View style={styles.sectionFoto}>
+                    {photo && (
+                      <Image
+                        source={{ uri: photo }}
+                        style={styles.imagePhoto}
+                      />
+                      // <Image
+                      //   source={openCamera ? { uri: photo } : { uri: null }}
+                      //   style={
+                      //     openCamera ? styles.imagePhoto : styles.imageHidden
+                      //   }
+                      // />
+                      ////////////Не оновлює фото камера/////////////////
+                    )}
+                    <TouchableOpacity
+                      style={!photo && styles.containerFrontal}
+                      onPress={() => {
+                        setType(
+                          type === Camera.Constants.Type.back
+                            ? Camera.Constants.Type.front
+                            : Camera.Constants.Type.back
+                        );
                       }}
-                    />
-                  </TouchableOpacity>
+                    >
+                      <Image
+                        source={
+                          !photo && require("../../assets/frontal_icon.png")
+                        }
+                        style={{
+                          width: 24,
+                          height: 24,
+                        }}
+                      />
+                    </TouchableOpacity>
 
-                  {/* /////////////////////takePhoto//////////////////////////////////// */}
-                  <TouchableOpacity
-                    style={styles.containerIconScreen}
-                    onPress={!photo ? takePhoto : sendPhoto}
-                  >
-                    <Image
-                      source={
-                        !photo
-                          ? require("../../assets/icon_foto.png")
-                          : require("../../assets/send_foto.png")
-                      }
-                      style={{ width: 24, height: 24 }}
-                    />
-                  </TouchableOpacity>
-                  {/* /////////////////////sendPhoto//////////////////////////////////// */}
-                </View>
-              </Camera>
-            )}
-          </View>
-        )}
-      </View>
+                    <TouchableOpacity
+                      style={!photo && styles.containerIconScreen}
+                      onPress={takePhoto}
+                    >
+                      <Image
+                        source={!photo && require("../../assets/icon_foto.png")}
+                        style={{ width: 24, height: 24 }}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                </Camera>
+              )}
+            </View>
+          )}
+        </View>
 
-      <View style={styles.section}>
-        <TouchableOpacity onPress={addImage}>
+        <View style={styles.section}>
+          {/* <TouchableOpacity onPress={photo ? retakePhoto : sendPhoto}>
           {photo ? (
             <Text style={styles.textScreen}>Редактировать фото</Text>
           ) : (
             <Text style={styles.textScreen}>Загрузите фото</Text>
           )}
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
-        <View style={styles.form}>
-          <TextInput
-            style={styles.input}
-            placeholder={"Название..."}
-            value={state.name}
-            onChangeText={(value) =>
-              setState((prevState) => ({ ...prevState, name: value }))
-            }
-            autoCapitalize={"none"}
-            // onFocus={() => setIsShowKeyboard(true)}
-          />
-
-          <TextInput
-            style={styles.inputMap}
-            placeholder={"Местность..."}
-            value={state.terrain}
-            onChangeText={(value) =>
-              setState((prevState) => ({ ...prevState, terrain: value }))
-            }
-            autoCapitalize={"none"}
-            // onFocus={() => setIsShowKeyboard(true)}
-          />
-          <Pressable style={styles.mapList}>
-            <Image
-              source={require("../../assets/map.png")}
-              style={styles.iconMap}
-            />
-            <MapView style={styles.map} />
-          </Pressable>
-
-          {image ? (
-            <TouchableOpacity activeOpacity={0.8} style={styles.buttonHover}>
-              <Text style={styles.btnTitleHover}>Опубликовать</Text>
-            </TouchableOpacity>
-          ) : (
-            <TouchableOpacity activeOpacity={0.8} style={styles.button}>
-              <Text style={styles.btnTitle}>Опубликовать</Text>
-            </TouchableOpacity>
-          )}
-
-          <TouchableOpacity style={styles.trash}>
-            <Image
-              source={require("../../assets/trash.png")}
-              // style={styles.iconTrash}
-            />
+          <TouchableOpacity onPress={addImage}>
+            {image ? (
+              <Text style={styles.textScreen}>Редактировать фото</Text>
+            ) : (
+              <Text style={styles.textScreen}>Загрузите фото</Text>
+            )}
           </TouchableOpacity>
+
+          <KeyboardAvoidingView
+            behavior={Platform.OS == "ios" ? "padding" : "height"}
+          >
+            <View style={styles.form}>
+              <TextInput
+                style={styles.input}
+                placeholder={"Название..."}
+                value={state.name}
+                onChangeText={(value) => {
+                  setState((prevState) => ({ ...prevState, name: value }));
+                  if (photo) {
+                    setIsDisabled(true);
+                  }
+                }}
+                autoCapitalize={"none"}
+                placeholderTextColor={state.name ? "#212121" : "#BDBDBD"}
+              />
+
+              <TextInput
+                style={styles.inputMap}
+                placeholder={"Местность..."}
+                value={state.terrain}
+                onChangeText={(value) => {
+                  setState((prevState) => ({ ...prevState, terrain: value }));
+                  if (photo) {
+                    setIsDisabled(true);
+                  }
+                }}
+                autoCapitalize={"none"}
+                placeholderTextColor={state.terrain ? "#212121" : "#BDBDBD"}
+              />
+
+              <TouchableOpacity style={styles.mapList} onPress={map}>
+                <Image
+                  source={require("../../assets/map.png")}
+                  style={styles.iconMap}
+                  ///////////Навігація не працює //////////////////////
+                  // onPress={map}
+                  // Закінчила Потім внести розміри для клавіату
+                />
+              </TouchableOpacity>
+
+              {/* // /////button/////////////////////// */}
+              <TouchableOpacity
+                activeOpacity={0.8}
+                style={isDisabled ? styles.buttonHover : styles.button}
+                onPress={photo ? sendPhoto : null}
+              >
+                <Text
+                  style={isDisabled ? styles.btnTitleHover : styles.btnTitle}
+                >
+                  Опубликовать
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.trash}
+                onPress={photo ? retakePhoto : null}
+              >
+                <Image
+                  source={require("../../assets/trash.png")}
+                  // style={styles.iconTrash}
+                />
+              </TouchableOpacity>
+            </View>
+          </KeyboardAvoidingView>
         </View>
-      </View>
-    </View>
+      </ScrollView>
+    </TouchableWithoutFeedback>
   );
 };
 
@@ -246,6 +312,24 @@ const styles = StyleSheet.create({
     borderColor: "#E8E8E8",
     marginTop: 32,
     marginBottom: 8,
+  },
+  imagePhoto: {
+    alignItems: "center",
+    justifyContent: "center",
+    height: 242,
+    width: 346,
+    backgroundColor: "#F6F6F6",
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: "#E8E8E8",
+    marginTop: 32,
+    marginBottom: 8,
+
+    position: "absolute",
+    top: -32,
+  },
+  imageHidden: {
+    display: "none",
   },
   containerIcon: {
     height: 60,
@@ -317,13 +401,12 @@ const styles = StyleSheet.create({
     borderBottomColor: "#E8E8E8",
     borderBottomWidth: 1,
 
-    color: "#BDBDBD",
     fontSize: 16,
     fontFamily: "Roboto-Regular",
   },
+
   inputMap: {
     height: 50,
-    color: "#BDBDBD",
     fontSize: 16,
     fontFamily: "Roboto-Regular",
     marginLeft: 25,
@@ -375,9 +458,5 @@ const styles = StyleSheet.create({
     // flex: 1,
     alignItems: "center",
     justifyContent: "flex-start",
-  },
-  map: {
-    width: "100%",
-    height: "100%",
   },
 });

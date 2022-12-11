@@ -11,7 +11,6 @@ import { PostsScreen } from "./screens/mainScreen/PostsScreen";
 import { ProfileScreen } from "./screens/mainScreen/ProfileScreen";
 import { CreateScreen } from "./screens/mainScreen/CreateScreen";
 import { Home } from "./screens/mainScreen/Home";
-import { CommentsScreen } from "./screens/mainScreen/CommentsScreen";
 
 // icons import
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -77,13 +76,6 @@ export const useRoute = (isAuth) => {
         }}
         name="Profile"
         component={ProfileScreen}
-      />
-      <MainTab.Screen
-        options={{
-          headerShown: false,
-        }}
-        name="Comments"
-        component={CommentsScreen}
       />
     </MainTab.Navigator>
   );

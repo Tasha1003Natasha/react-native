@@ -1,145 +1,36 @@
-import React, { useState, useEffect } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  Image,
-  ImageBackground,
-  FlatList,
-} from "react-native";
-import { Posts } from "../../components/Posts";
-import { Toolbar } from "../../components/Toolbar";
+import React from "react";
+import { moduleName } from "react-native";
+import { createStackNavigator } from "@react-navigation/stack";
+import { DefaultScreenPosts } from "../nestedScreens/DefaultScreenPosts";
+import { CommentsScreen } from "../nestedScreens/CommentsScreen";
+import { MapScreen } from "../nestedScreens/MapScreen";
 
-import { useNavigation } from "@react-navigation/native";
+const NestedScreen = createStackNavigator();
 
-export const PostsScreen = ({ route }) => {
-  const [posts, setPosts] = useState([]);
-  // console.log("route.params", route.params);
-  const navigation = useNavigation();
-
-  useEffect(() => {
-    if (route.params) {
-      setPosts((prevState) => [...prevState, route.params]);
-    }
-  }, [route.params]);
-  // console.log("posts", posts);
-
+export const PostsScreen = () => {
   return (
-    <View style={styles.container}>
-      <TouchableOpacity style={styles.containerPosts}>
-        <Text style={styles.postsText}>Публикации</Text>
-        <Image
-          source={require("../../assets/logout.png")}
-          style={styles.iconLogout}
-        />
-      </TouchableOpacity>
-      <View style={styles.postsLine} />
-
-      <View style={styles.section}>
-        <View style={styles.containerImage}>
-          <ImageBackground
-            source={require("../../assets/defult.png")}
-            style={styles.image}
-          ></ImageBackground>
-
-          <View style={styles.containerUser}>
-            <Text style={styles.textUser}>Natali Romanova</Text>
-            <Text style={styles.emailUser}>email@example.com</Text>
-          </View>
-        </View>
-      </View>
-
-      {/* <FlatList
-        data={posts}
-        // keyExtractor={(item, indx) => indx.toString()}
-        renderItem={({ item }) => (
-          <View style={styles.post}>
-            <Image source={{ uri: item.photo }} />
-          </View>
-        )}
-      /> */}
-
-      <View style={styles.post}>
-        <FlatList
-          data={posts}
-          keyExtractor={(item, indx) => indx.toString()}
-          renderItem={({ item }) => <Posts item={item} />}
-        />
-      </View>
-      {/* 
-      <View style={styles.post}>
-        <Posts posts={posts} />
-      </View> */}
-
-      <Toolbar />
-    </View>
+    <NestedScreen.Navigator>
+      <NestedScreen.Screen
+        name="DefaultScreen"
+        component={DefaultScreenPosts}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <NestedScreen.Screen
+        name="Comments"
+        component={CommentsScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <NestedScreen.Screen
+        name="Map"
+        component={MapScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+    </NestedScreen.Navigator>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#FFFFFF",
-    position: "relative",
-    paddingTop: 44,
-  },
-  containerPosts: {
-    paddingTop: 11,
-    paddingBottom: 11,
-    flexDirection: "row",
-    alignItems: "baseline",
-    justifyContent: "flex-end",
-    paddingHorizontal: 16,
-  },
-  postsText: {
-    alignItems: "center",
-    fontSize: 17,
-    color: "#212121",
-    fontFamily: "Roboto-Medium",
-  },
-  iconLogout: {
-    marginLeft: 100,
-    marginRight: 10,
-    alignItems: "flex-end",
-  },
-  postsLine: {
-    borderBottomColor: "#E5E5E5",
-    borderBottomWidth: 1,
-  },
-
-  // ////////User/////////
-  section: {
-    paddingHorizontal: 16,
-  },
-  post: {
-    flex: 1,
-    paddingHorizontal: 16,
-    alignItems: "center",
-  },
-  containerImage: {
-    flexDirection: "row",
-  },
-  image: {
-    width: 60,
-    height: 60,
-    borderRadius: 16,
-    marginTop: 32,
-    marginLeft: 16,
-  },
-  containerUser: {
-    alignItems: "center",
-    marginLeft: 8,
-    marginTop: 48,
-  },
-  textUser: {
-    color: "#212121",
-    fontSize: 13,
-    fontFamily: "Roboto-Bold",
-  },
-  emailUser: {
-    color: "rgba(33,33,33,0.8)",
-    fontSize: 11,
-    fontFamily: "Roboto-Medium",
-  },
-});
