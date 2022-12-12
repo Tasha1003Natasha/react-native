@@ -50,7 +50,7 @@ export const CreateScreen = ({ navigation }) => {
       await MediaLibrary.requestPermissionsAsync();
       setHasCameraPermission(cameraStatus.status === "granted");
 
-      let { status } = await Location.requestForegroundPermissionsAsync();
+      const { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") {
         setErrorMsg("Permission to access location was denied");
         return;
