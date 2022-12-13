@@ -13,6 +13,8 @@ import {
   Pressable,
   ImageBackground,
 } from "react-native";
+import { useDispatch } from "react-redux";
+import { authSignInUser } from "../../redux/auth/authOperations";
 
 const initialState = {
   email: "",
@@ -20,13 +22,15 @@ const initialState = {
 };
 
 export const LoginScreen = ({ navigation }) => {
+  const dispatch = useDispatch();
+
   const registration = () => {
     navigation.navigate("Registration");
   };
 
-  const home = () => {
-    navigation.navigate("Home");
-  };
+  // const home = () => {
+  //   navigation.navigate("Home");
+  // };
 
   const [state, setState] = useState(initialState);
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
@@ -46,14 +50,21 @@ export const LoginScreen = ({ navigation }) => {
     return () => subscription.remove();
   }, []);
 
-  const KeyboardHide = () => {
+  const handleSubmit = () => {
+    // console.log("click");
     Keyboard.dismiss();
-    console.log(state);
+    // console.log(state);
+    dispatch(authSignInUser(state));
     setState(initialState);
   };
 
+  const keyboardHide = () => {
+    Keyboard.dismiss();
+    // setIsShowKeyboard(false);
+  };
+
   return (
-    <TouchableWithoutFeedback onPress={KeyboardHide}>
+    <TouchableWithoutFeedback onPress={keyboardHide}>
       <View style={styles.container}>
         <ImageBackground
           source={require("../../assets/image.png")}
@@ -106,7 +117,7 @@ export const LoginScreen = ({ navigation }) => {
                 <TouchableOpacity
                   activeOpacity={0.8}
                   style={styles.button}
-                  onPress={home}
+                  onPress={handleSubmit}
                 >
                   <Text style={styles.btnTitle}>Войти</Text>
                 </TouchableOpacity>

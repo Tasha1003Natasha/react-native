@@ -14,6 +14,8 @@ import {
   Image,
   ImageBackground,
 } from "react-native";
+import { useDispatch } from "react-redux";
+import { authSignUpUser } from "../../redux/auth/authOperations";
 
 const initialState = {
   username: "",
@@ -22,13 +24,16 @@ const initialState = {
 };
 
 export const RegistrationScreen = ({ navigation }) => {
+  // console.log(Platform.OS);
+  const dispatch = useDispatch();
+
   const login = () => {
     navigation.navigate("Login");
   };
 
-  const home = () => {
-    navigation.navigate("Home");
-  };
+  // const home = () => {
+  //   navigation.navigate("Home");
+  // };
 
   const [state, setState] = useState(initialState);
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
@@ -53,14 +58,19 @@ export const RegistrationScreen = ({ navigation }) => {
     return () => subscription.remove();
   }, []);
 
-  const KeyboardHide = () => {
+  const handleSubmit = () => {
     Keyboard.dismiss();
-    console.log(state);
+    // console.log(state);
+    dispatch(authSignUpUser(state));
     setState(initialState);
   };
 
+  const keyboardHide = () => {
+    Keyboard.dismiss();
+  };
+
   return (
-    <TouchableWithoutFeedback onPress={KeyboardHide}>
+    <TouchableWithoutFeedback onPress={keyboardHide}>
       <View style={styles.container}>
         <ImageBackground
           source={require("../../assets/image.png")}
@@ -106,7 +116,6 @@ export const RegistrationScreen = ({ navigation }) => {
                     setState((prevState) => ({ ...prevState, username: value }))
                   }
                   autoCapitalize={"none"}
-                  onFocus={() => setIsShowKeyboard(true)}
                 />
                 <TextInput
                   style={styles.input}
@@ -116,7 +125,6 @@ export const RegistrationScreen = ({ navigation }) => {
                     setState((prevState) => ({ ...prevState, email: value }))
                   }
                   autoCapitalize={"none"}
-                  onFocus={() => setIsShowKeyboard(true)}
                 />
                 <View style={styles.inputSection}>
                   <TextInput
@@ -131,7 +139,6 @@ export const RegistrationScreen = ({ navigation }) => {
                         password: value,
                       }))
                     }
-                    onFocus={() => setIsShowKeyboard(true)}
                   />
 
                   <Pressable style={styles.show} onPress={handleClick}>
@@ -140,7 +147,8 @@ export const RegistrationScreen = ({ navigation }) => {
                 </View>
 
                 <TouchableOpacity
-                  onPress={home}
+                  onPress={handleSubmit}
+                  // onPress={home}
                   activeOpacity={0.8}
                   style={styles.button}
                 >
