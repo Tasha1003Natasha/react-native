@@ -11,12 +11,22 @@ import {
 } from "react-native";
 import { Toolbar } from "../../components/Toolbar";
 
+// import { auth } from "../../firebase/config";
+// import { signOut } from "firebase/auth";
+import { useDispatch } from "react-redux";
+import { authSignOutUser } from "../../redux/auth/authOperations";
+
 export const ProfileScreen = () => {
   const [number, setNumber] = useState(0);
   const handleClick = () => setNumber(number + 1);
   const [image, setImage] = useState(null);
   const addImage = () => {};
 
+  const dispach = useDispatch();
+
+  const signOut = () => {
+    dispach(authSignOutUser());
+  };
   //   const userName = useSelector(state => state.user?.user?.email);
   //
 
@@ -47,7 +57,15 @@ export const ProfileScreen = () => {
             }}
           >
             {/* <Text style={styles.userName}>{userName || "U"}</Text> */}
-            <Text style={styles.userName}>userName</Text>
+            <View style={styles.containerLogout}>
+              <Text style={styles.userName}>userName</Text>
+              <TouchableOpacity onPress={signOut}>
+                <Image
+                  source={require("../../assets/logout.png")}
+                  style={styles.iconLogout}
+                />
+              </TouchableOpacity>
+            </View>
             {/* /* Аватарка */}
             <View style={styles.avatarSection}>
               <TouchableOpacity onPress={addImage}>
@@ -119,6 +137,19 @@ const styles = StyleSheet.create({
     alignItems: "center",
     position: "relative",
   },
+  containerLogout: {
+    alignItems: "baseline",
+    marginHorizontal: 16,
+    flexDirection: "row",
+    justifyContent: "center",
+  },
+  iconLogout: {
+    position: "absolute",
+    marginLeft: 60,
+    bottom: 40,
+    left: 40,
+    transform: [{ translateY: -40 }, { translateX: -40 }],
+  },
   avatarSection: {
     position: "absolute",
     backgroundColor: "#F6F6F6",
@@ -167,7 +198,7 @@ const styles = StyleSheet.create({
     marginTop: 8,
     fontSize: 16,
     fontFamily: "Roboto-Medium",
-    marginHorizontal: 16,
+    // marginHorizontal: 16,
   },
   // comment
   containerComment: {

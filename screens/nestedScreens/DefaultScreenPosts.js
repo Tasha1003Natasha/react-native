@@ -11,9 +11,19 @@ import {
 import { Posts } from "../../components/Posts";
 import { Toolbar } from "../../components/Toolbar";
 
+// import { auth } from "../../firebase/config";
+// import { signOut } from "firebase/auth";
+import { useDispatch } from "react-redux";
+import { authSignOutUser } from "../../redux/auth/authOperations";
+
 export const DefaultScreenPosts = ({ route }) => {
   const [posts, setPosts] = useState([]);
   // console.log("route.params", route.params);
+  const dispach = useDispatch();
+
+  const signOut = () => {
+    dispach(authSignOutUser());
+  };
 
   useEffect(() => {
     if (route.params) {
@@ -26,7 +36,7 @@ export const DefaultScreenPosts = ({ route }) => {
     <View style={styles.container}>
       <View style={styles.containerPosts}>
         <Text style={styles.postsText}>Публикации</Text>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={signOut}>
           <Image
             source={require("../../assets/logout.png")}
             style={styles.iconLogout}
