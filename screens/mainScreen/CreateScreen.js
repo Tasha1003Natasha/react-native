@@ -108,9 +108,6 @@ export const CreateScreen = ({ navigation }) => {
     setPhoto(null);
     setState("");
     setIsDisabled(false);
-
-    setOpenCamera(true);
-    setCamera(null);
   };
 
   const retakePhoto = async () => {
@@ -144,32 +141,31 @@ export const CreateScreen = ({ navigation }) => {
     const storageRef = ref(storage, `postImage/${blobId}`);
     const uploadTask = uploadBytesResumable(storageRef, blob);
     // console.log("uploadTask", uploadTask);
+
     ///////////////////////////////////////Отримання посилання на зроблену фотографію
-    uploadTask.then((snapshot) => {
-      // console.log("snapshot", snapshot);
-      getDownloadURL(snapshot.ref).then((downloadURL) => {
-        console.log("downloadURL", downloadURL);
-        // return downloadURL;
+    return uploadTask.then((snapshot) => {
+      // console.log("snapshot", snapshot)
+      return getDownloadURL(snapshot.ref).then((downloadURL) => {
+        // console.log("downloadURL", downloadURL);
+        return downloadURL;
       });
     });
   };
+
   ///////////////////Post// upload Post To Server ////////////////////////////
   const uploadPostToServer = async () => {
-    const uploadPhoto = await uploadPhotoToServer(); ///////undefind///////////////////
-    // uploadPhotoToServer();
+    const uploadPhoto = await uploadPhotoToServer();
     console.log("uploadPhoto", uploadPhoto);
 
-    if (uploadPhoto) {
-      const docData = {
-        uploadPhoto,
-        state,
-        // location: location.coords,
-        userId,
-        username,
-      };
-      console.log("docData", docData);
-      const createPost = addDoc(collection(db, "posts"), docData);
-    }
+    const docData = {
+      uploadPhoto,
+      state,
+      location: location.coords,
+      userId,
+      username,
+    };
+    console.log("docData", docData);
+    const createPost = addDoc(collection(db, "posts"), docData);
   };
 
   return (
