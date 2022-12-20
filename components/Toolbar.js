@@ -1,9 +1,10 @@
-import React from "react";
+// import React, { useState } from "react";
 import { View, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
 export const Toolbar = () => {
   const navigation = useNavigation();
+  // const [photo, setPhoto] = useState(null);
 
   return (
     <View tyle={styles.containerToolbar}>
@@ -12,8 +13,15 @@ export const Toolbar = () => {
         <TouchableOpacity onPress={() => navigation.navigate("Posts")}>
           <Image source={require("../assets/grid.png")} />
         </TouchableOpacity>
-
-        <TouchableOpacity onPress={() => navigation.navigate("Create")}>
+        {/* ///////закінчила тут //////////////// */}
+        <TouchableOpacity
+          // onPress={() => {
+          //   setPhoto(null), navigation.navigate("Create");
+          // }}
+          onPress={() => {
+            navigation.navigate("Create");
+          }}
+        >
           <Image source={require("../assets/new.png")} style={styles.toolbar} />
         </TouchableOpacity>
 

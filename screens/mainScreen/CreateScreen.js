@@ -17,6 +17,17 @@ import * as MediaLibrary from "expo-media-library";
 import { useIsFocused } from "@react-navigation/native";
 import * as Location from "expo-location";
 
+import { storage, db } from "../../firebase/config";
+import {
+  ref,
+  getDownloadURL,
+  uploadBytesResumable,
+  uploadBytes,
+} from "firebase/storage";
+import { collection, addDoc } from "firebase/firestore";
+
+import { useSelector } from "react-redux";
+
 const initialState = {
   name: "",
   terrain: "",
@@ -39,16 +50,25 @@ export const CreateScreen = ({ navigation }) => {
   //////////////disabled//////////////////
   const [isDisabled, setIsDisabled] = useState(false);
   // image
-  const [image, setImage] = useState(null);
-  const addImage = () => {};
+  // const [image, setImage] = useState(null);
+  // const addImage = () => {};
   //////////////Keyboard/////////////////
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
+  //////////////location////////////////
+  const [location, setLocation] = useState(null);
+
+  const { userId, username } = useSelector((state) => state.auth);
 
   useEffect(() => {
     (async () => {
       const cameraStatus = await Camera.requestCameraPermissionsAsync();
       await MediaLibrary.requestPermissionsAsync();
       setHasCameraPermission(cameraStatus.status === "granted");
+
+      const location = await Location.getCurrentPositionAsync({});
+      setLocation(location);
+
+      setState(state);
 
       const { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") {
@@ -67,20 +87,30 @@ export const CreateScreen = ({ navigation }) => {
   };
 
   const takePhoto = async () => {
-    const photo = await camera.takePictureAsync();
-    const location = await Location.getCurrentPositionAsync();
-    console.log("latitude", location.coords.latitude);
-    console.log("longitude", location.coords.longitude);
-    setPhoto(photo.uri);
-    // console.log("photo", photo);
+    // console.log("state", state);
+    // console.log("location", location);
+
+    // const photo = await camera.takePictureAsync();
+    // const location = await Location.getCurrentPositionAsync();
+    // console.log("latitude", location.coords.latitude);
+    // console.log("longitude", location.coords.longitude);
+
+    const { uri } = await camera.takePictureAsync();
+    setPhoto(uri);
+    // console.log("uri ", uri);
   };
 
   const sendPhoto = async () => {
+    // uploadPhotoToServer();
+    uploadPostToServer();
     // console.log("navigation", navigation);
     navigation.navigate("DefaultScreen", { photo });
     setPhoto(null);
     setState("");
     setIsDisabled(false);
+
+    setOpenCamera(true);
+    setCamera(null);
   };
 
   const retakePhoto = async () => {
@@ -89,6 +119,57 @@ export const CreateScreen = ({ navigation }) => {
     setState("");
     setIsDisabled(false);
     setCamera(null);
+  };
+
+  /////////////////////PhotoToServer//////////////////
+  function urlToBlob(photo) {
+    return new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.addEventListener("error", reject);
+      xhr.addEventListener("readystatechange", () => {
+        if (xhr.readyState === 4) {
+          resolve(xhr.response);
+        }
+      });
+      xhr.open("GET", photo);
+      xhr.responseType = "blob"; // convert type
+      xhr.send();
+    });
+  }
+
+  const uploadPhotoToServer = async () => {
+    //Завантаження фото на storage
+    const blob = await urlToBlob(photo);
+    const blobId = blob.data.blobId;
+    const storageRef = ref(storage, `postImage/${blobId}`);
+    const uploadTask = uploadBytesResumable(storageRef, blob);
+    // console.log("uploadTask", uploadTask);
+    ///////////////////////////////////////Отримання посилання на зроблену фотографію
+    uploadTask.then((snapshot) => {
+      // console.log("snapshot", snapshot);
+      getDownloadURL(snapshot.ref).then((downloadURL) => {
+        console.log("downloadURL", downloadURL);
+        // return downloadURL;
+      });
+    });
+  };
+  ///////////////////Post// upload Post To Server ////////////////////////////
+  const uploadPostToServer = async () => {
+    const uploadPhoto = await uploadPhotoToServer(); ///////undefind///////////////////
+    // uploadPhotoToServer();
+    console.log("uploadPhoto", uploadPhoto);
+
+    if (uploadPhoto) {
+      const docData = {
+        uploadPhoto,
+        state,
+        // location: location.coords,
+        userId,
+        username,
+      };
+      console.log("docData", docData);
+      const createPost = addDoc(collection(db, "posts"), docData);
+    }
   };
 
   return (

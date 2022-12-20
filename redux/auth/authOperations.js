@@ -22,18 +22,20 @@ export const authSignUpUser =
 
       await updateProfile(user, {
         displayName: username,
+        email: email,
       });
+      // console.log(" updateProfile", updateProfile);
 
-      const { displayName, uid } = auth.currentUser;
+      const { displayName, uid, email } = auth.currentUser;
 
       const userUpdateProfile = {
         username: displayName,
         userId: uid,
+        email: email,
       };
 
-      dispatch(updateUserProfile(userUpdateProfile));
-
-      console.log("user", user);
+      // dispatch(updateUserProfile(userUpdateProfile));
+      // console.log("user", user);
     } catch (error) {
       console.log("error", error);
       console.log("error.message", error.message);
@@ -61,6 +63,7 @@ export const authStateChangeUser = () => async (dispatch, getState) => {
       const userUpdateProfile = {
         username: user.displayName,
         userId: user.uid,
+        email: user.email,
       };
 
       dispatch(updateUserProfile(userUpdateProfile));

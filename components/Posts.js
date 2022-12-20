@@ -2,10 +2,12 @@ import React, { useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
+
 export const Posts = ({ item }) => {
   const navigation = useNavigation();
   const [number, setNumber] = useState(0);
   const handleClick = () => setNumber(number + 1);
+
 
   return (
     <View style={styles.containerCreateScreen} key={item}>

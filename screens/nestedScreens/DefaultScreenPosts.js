@@ -13,13 +13,15 @@ import { Toolbar } from "../../components/Toolbar";
 
 // import { auth } from "../../firebase/config";
 // import { signOut } from "firebase/auth";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { authSignOutUser } from "../../redux/auth/authOperations";
 
 export const DefaultScreenPosts = ({ route }) => {
   const [posts, setPosts] = useState([]);
   // console.log("route.params", route.params);
   const dispach = useDispatch();
+  const userName = useSelector((state) => state.auth.username);
+  const userEmail = useSelector((state) => state.auth.email);
 
   const signOut = () => {
     dispach(authSignOutUser());
@@ -53,8 +55,8 @@ export const DefaultScreenPosts = ({ route }) => {
           ></ImageBackground>
 
           <View style={styles.containerUser}>
-            <Text style={styles.textUser}>Natali Romanova</Text>
-            <Text style={styles.emailUser}>email@example.com</Text>
+            <Text style={styles.textUser}>{userName}</Text>
+            <Text style={styles.emailUser}>{userEmail}</Text>
           </View>
         </View>
       </View>
