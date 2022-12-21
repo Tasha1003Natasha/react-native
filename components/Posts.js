@@ -2,12 +2,10 @@ import React, { useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
-
 export const Posts = ({ item }) => {
   const navigation = useNavigation();
   const [number, setNumber] = useState(0);
   const handleClick = () => setNumber(number + 1);
-
 
   return (
     <View style={styles.containerCreateScreen} key={item}>
@@ -15,9 +13,11 @@ export const Posts = ({ item }) => {
           source={require("../assets/default_image.png")}
           style={styles.imageScreen}
         /> */}
-      <Image source={{ uri: item.photo }} style={styles.imageScreen} />
+      <Image source={{ uri: item.uploadPhoto }} style={styles.imageScreen} />
 
-      <Text style={styles.textScreen}>{item.name ? item.name : "Name"}</Text>
+      <Text style={styles.textScreen}>
+        {item.state.name ? item.state.name : "Name"}
+      </Text>
 
       <View style={styles.containerPostScreen}>
         <TouchableOpacity
@@ -41,7 +41,7 @@ export const Posts = ({ item }) => {
         >
           <Image source={require("../assets/map.png")} style={styles.iconMap} />
           <Text style={styles.terrainScreen}>
-            {item.terrain ? item.terrain : "Terrain.."}
+            {item.state.terrain ? item.state.terrain : "Terrain.."}
           </Text>
         </TouchableOpacity>
       </View>

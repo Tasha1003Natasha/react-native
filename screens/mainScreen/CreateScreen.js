@@ -18,14 +18,8 @@ import { useIsFocused } from "@react-navigation/native";
 import * as Location from "expo-location";
 
 import { storage, db } from "../../firebase/config";
-import {
-  ref,
-  getDownloadURL,
-  uploadBytesResumable,
-  uploadBytes,
-} from "firebase/storage";
+import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 import { collection, addDoc } from "firebase/firestore";
-
 import { useSelector } from "react-redux";
 
 const initialState = {
@@ -104,7 +98,8 @@ export const CreateScreen = ({ navigation }) => {
     // uploadPhotoToServer();
     uploadPostToServer();
     // console.log("navigation", navigation);
-    navigation.navigate("DefaultScreen", { photo });
+    // navigation.navigate("DefaultScreen", { photo });
+    navigation.navigate("DefaultScreen");
     setPhoto(null);
     setState("");
     setIsDisabled(false);
@@ -160,7 +155,8 @@ export const CreateScreen = ({ navigation }) => {
     const docData = {
       uploadPhoto,
       state,
-      location: location.coords,
+      // location: location.coords,
+      location,
       userId,
       username,
     };

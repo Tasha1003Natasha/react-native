@@ -16,6 +16,10 @@ import { Toolbar } from "../../components/Toolbar";
 import { useDispatch, useSelector } from "react-redux";
 import { authSignOutUser } from "../../redux/auth/authOperations";
 
+import { storage, db } from "../../firebase/config";
+import { doc, onSnapshot, query } from "firebase/firestore";
+import { collection, getDocs } from "firebase/firestore";
+
 export const DefaultScreenPosts = ({ route }) => {
   const [posts, setPosts] = useState([]);
   // console.log("route.params", route.params);
@@ -27,11 +31,34 @@ export const DefaultScreenPosts = ({ route }) => {
     dispach(authSignOutUser());
   };
 
+  ///////////Отримання даних з серверу ///////////////////////////
+  const getAllPost = async () => {
+    const colRef = collection(db, "posts");
+    const q = query(colRef);
+    const querySnapshot = onSnapshot(q, (snapshot) => {
+      // console.log("snapshot", snapshot);
+      let posts = [];
+      // console.log("posts", posts);
+      snapshot.docs.forEach((doc) => {
+        // console.log("doc.data", doc.data());
+        posts.push({ ...doc.data(), id: doc.id });
+      });
+      setPosts(posts);
+    });
+    return () => querySnapshot();
+  };
+
   useEffect(() => {
-    if (route.params) {
-      setPosts((prevState) => [...prevState, route.params]);
-    }
-  }, [route.params]);
+    getAllPost();
+  }, []);
+
+  //////////////////////////////
+
+  // useEffect(() => {
+  //   if (route.params) {
+  //     setPosts((prevState) => [...prevState, route.params]);
+  //   }
+  // }, [route.params]);
   // console.log("posts", posts);
 
   return (
