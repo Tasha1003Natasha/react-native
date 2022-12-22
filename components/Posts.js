@@ -22,7 +22,12 @@ export const Posts = ({ item }) => {
       <View style={styles.containerPostScreen}>
         <TouchableOpacity
           style={styles.containerComment}
-          onPress={() => navigation.navigate("Comments")}
+          onPress={() =>
+            navigation.navigate("Comments", {
+              postId: item.id,
+              uploadPhoto: item.uploadPhoto,
+            })
+          }
         >
           {number ? (
             <Image source={require("../assets/message_circle.png")} />
@@ -36,7 +41,9 @@ export const Posts = ({ item }) => {
         <TouchableOpacity
           style={styles.containerMap}
           onPress={() => {
-            navigation.navigate("Map");
+            navigation.navigate("Map", { location: item.location.coords });
+            // const locationAll = item.location.coords;
+            // console.log("locationAll", locationAll);
           }}
         >
           <Image source={require("../assets/map.png")} style={styles.iconMap} />

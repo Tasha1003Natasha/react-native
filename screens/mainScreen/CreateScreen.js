@@ -50,6 +50,8 @@ export const CreateScreen = ({ navigation }) => {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   //////////////location////////////////
   const [location, setLocation] = useState(null);
+  //////////////comment////////////////
+  const [comment, setComment] = useState("");
 
   const { userId, username } = useSelector((state) => state.auth);
 
@@ -150,7 +152,7 @@ export const CreateScreen = ({ navigation }) => {
   ///////////////////Post// upload Post To Server ////////////////////////////
   const uploadPostToServer = async () => {
     const uploadPhoto = await uploadPhotoToServer();
-    console.log("uploadPhoto", uploadPhoto);
+    // console.log("uploadPhoto", uploadPhoto);
 
     const docData = {
       uploadPhoto,
@@ -159,6 +161,7 @@ export const CreateScreen = ({ navigation }) => {
       location,
       userId,
       username,
+      comment,
     };
     console.log("docData", docData);
     const createPost = addDoc(collection(db, "posts"), docData);

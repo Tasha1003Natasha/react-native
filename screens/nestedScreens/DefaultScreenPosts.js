@@ -40,7 +40,7 @@ export const DefaultScreenPosts = ({ route }) => {
       let posts = [];
       // console.log("posts", posts);
       snapshot.docs.forEach((doc) => {
-        // console.log("doc.data", doc.data());
+        console.log("doc.data", doc.data());
         posts.push({ ...doc.data(), id: doc.id });
       });
       setPosts(posts);
