@@ -17,44 +17,27 @@ import { useSelector } from "react-redux";
 import { storage, db } from "../../firebase/config";
 import { collection, addDoc, doc } from "firebase/firestore";
 
-const initialState = {
-  name: "",
-  terrain: "",
-  comment: "",
-};
-
 export const CommentsScreen = ({ route }) => {
-  console.log("route.params", route.params);
+  // console.log("route.params", route.params);
   const { postId } = route.params;
+  // console.log("postId", postId);
+
   ////////////////////Фото/////////////////////////
   const { uploadPhoto } = route.params;
-
-  const [state, setState] = useState(initialState);
-  // const [image, setImage] = useState(null);
-  // const addImage = () => {};
+  const [comment, setComment] = useState("");
   const navigation = useNavigation();
   //   const userName = useSelector(state => state.user?.user?.email);
   //   const avatarName = userName?.slice(0, 1).toLocaleUpperCase();
 
-  // const [comment, setComment] = useState("");
   const { username } = useSelector((state) => state.auth);
-  const createPost = async () => {
-    // const comRef = collection(db, "posts");
-    // console.log("comRef", comRef);
-    // comRef.doc(postId).addDoc({ comment, username });
-    // const storageRef = doc(collection(db, "posts"));
-    const storageRef = ref.collection("posts").doc(postId);
-    console.log("storageRef", storageRef);
 
-    const comData = {
+  const createPost = async () => {
+    const comRef = doc(db, "posts", `${postId}`);
+    const colRef = collection(comRef, "comments");
+    addDoc(colRef, {
       username,
-      state,
-    };
-    console.log("comData", comData);
-    const createcommentPost = storageRef.addDoc(
-      collection(db, "comment"),
-      comData
-    );
+      comment,
+    });
   };
 
   return (
@@ -96,26 +79,31 @@ export const CommentsScreen = ({ route }) => {
           <KeyboardAvoidingView
             behavior={Platform.OS == "ios" ? "padding" : "height"}
           >
-            <View style={styles.containerComment}>
-              <UserAvatar style={styles.avatar} name="avatar" />
-              {/* <Text style={styles.avatarName}>{avatarName || "U"}</Text> */}
-              <View style={styles.comment}>
-                <Text style={styles.commentText}>{state.comment}</Text>
-                <Text style={styles.commentData}>09 июня, 2020 | 08:40</Text>
+            {comment && (
+              <View style={styles.containerComment}>
+                <UserAvatar style={styles.avatar} name="avatar" />
+                {/* <Text style={styles.avatarName}>{avatarName || "U"}</Text> */}
+                <View style={styles.comment}>
+                  <Text style={styles.commentText}>{comment}</Text>
+                  <Text style={styles.commentData}>09 июня, 2020 | 08:40</Text>
+                </View>
               </View>
-            </View>
-
+            )}
             <View style={styles.form}>
               <TextInput
                 style={styles.input}
                 placeholder={"Комментировать..."}
-                value={state.comment}
-                onChangeText={(value) =>
-                  setState((prevState) => ({ ...prevState, comment: value }))
-                }
+                value={comment}
+                // onChangeText={(value) =>
+                //   setState((prevState) => ({ ...prevState, comment: value }))
+                // }
+                // onChangeText={(value) =>
+                //   setComment((prevState) => ({ ...prevState, comment: value }))
+                // }
+                onChangeText={setComment}
                 autoCapitalize={"none"}
-                placeholderTextColor={state.comment ? "#212121" : "#BDBDBD"}
-                // onChangeText={setComment}
+                placeholderTextColor={comment ? "#212121" : "#BDBDBD"}
+
                 // onFocus={() => setIsShowKeyboard(true)}
               />
 
