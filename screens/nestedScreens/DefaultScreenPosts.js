@@ -17,8 +17,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { authSignOutUser } from "../../redux/auth/authOperations";
 
 import { storage, db } from "../../firebase/config";
-import { doc, onSnapshot, query } from "firebase/firestore";
-import { collection, getDocs } from "firebase/firestore";
+
+import { collection, onSnapshot, query } from "firebase/firestore";
 
 export const DefaultScreenPosts = ({ route }) => {
   const [posts, setPosts] = useState([]);

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -10,12 +10,13 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
   KeyboardAvoidingView,
+  FlatList,
 } from "react-native";
 import UserAvatar from "react-native-user-avatar";
 import { useNavigation } from "@react-navigation/native";
 import { useSelector } from "react-redux";
 import { storage, db } from "../../firebase/config";
-import { collection, addDoc, doc } from "firebase/firestore";
+import { collection, addDoc, doc, query, onSnapshot } from "firebase/firestore";
 
 export const CommentsScreen = ({ route }) => {
   // console.log("route.params", route.params);
@@ -25,19 +26,124 @@ export const CommentsScreen = ({ route }) => {
   ////////////////////Фото/////////////////////////
   const { uploadPhoto } = route.params;
   const [comment, setComment] = useState("");
+  const [allComments, setAllComments] = useState([]);
   const navigation = useNavigation();
+  //////////////Keyboard/////////////////
+  const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   //   const userName = useSelector(state => state.user?.user?.email);
   //   const avatarName = userName?.slice(0, 1).toLocaleUpperCase();
 
   const { username } = useSelector((state) => state.auth);
 
+  useEffect(() => {
+    getAllPosts();
+  }, []);
+
+  ////////date////////////////////////
+  const showTime = async () => {
+    // function showTime() {
+    function addZero(i) {
+      if (i < 10) {
+        i = "0" + i;
+      }
+      return i;
+    }
+
+    const dateTime = new Date();
+    const year = dateTime.getFullYear();
+    const day = addZero(dateTime.getDate());
+    const hours = addZero(dateTime.getHours());
+    const minutes = addZero(dateTime.getMinutes());
+    let allMonth;
+    const month = dateTime.getMonth();
+    // console.log("month", month);
+    // console.log("allMonth", allMonth);
+
+    switch (month) {
+      case 0:
+        allMonth = "января";
+        break;
+      case 1:
+        allMonth = "февраля";
+        break;
+      case 2:
+        allMonth = "марта";
+        break;
+      case 3:
+        allMonth = "апреля";
+        break;
+      case 4:
+        allMonth = "мае";
+        break;
+      case 5:
+        allMonth = "июня";
+        break;
+      case 6:
+        allMonth = "июля";
+        break;
+      case 7:
+        allMonth = "августа";
+        break;
+      case 8:
+        allMonth = "сентября";
+        break;
+      case 9:
+        allMonth = "октября";
+        break;
+      case 10:
+        allMonth = "ноября";
+        break;
+      case 11:
+        allMonth = "декабря";
+        break;
+    }
+    // console.log("allMonth", allMonth);
+
+    const allData =
+      day +
+      " " +
+      allMonth +
+      " " +
+      year +
+      " " +
+      "|" +
+      " " +
+      hours +
+      ":" +
+      minutes;
+
+    const data = allData.toString();
+    return data;
+  };
+
   const createPost = async () => {
+    const data = await showTime();
+    // console.log("data", data);
     const comRef = doc(db, "posts", `${postId}`);
     const colRef = collection(comRef, "comments");
+
     addDoc(colRef, {
       username,
       comment,
+      data,
     });
+  };
+
+  const getAllPosts = async () => {
+    const comRef = doc(db, "posts", `${postId}`);
+    const colRef = collection(comRef, "comments");
+    const q = query(colRef);
+    const querySnapshot = onSnapshot(q, (snapshot) => {
+      // console.log("snapshot", snapshot);
+      let allComments = [];
+      // console.log("allComments", allComments);
+      snapshot.docs.forEach((doc) => {
+        console.log("doc.data", doc.data());
+        allComments.push({ ...doc.data(), id: doc.id });
+      });
+      setAllComments(allComments);
+    });
+    return () => querySnapshot();
   };
 
   return (
@@ -57,9 +163,10 @@ export const CommentsScreen = ({ route }) => {
 
         <View style={styles.postsLine} />
 
-        <View style={styles.containerCreateScreen}>
-          <TouchableOpacity style={styles.containerScreen}>
-            {/* {image ? (
+        <ScrollView nestedScrollEnabled={true} style={{ width: "100%" }}>
+          <View style={styles.containerCreateScreen}>
+            <TouchableOpacity style={styles.containerScreen}>
+              {/* {image ? (
               <Image
                 source={{ uri: uploadPhoto }}
                 style={{ width: 343, height: 240 }}
@@ -68,38 +175,44 @@ export const CommentsScreen = ({ route }) => {
               <Image source={require("../../assets/default_image.png")} />
             )} */}
 
-            <Image
-              source={{ uri: uploadPhoto }}
-              style={{ width: 343, height: 240 }}
-            />
-          </TouchableOpacity>
-        </View>
+              <Image
+                source={{ uri: uploadPhoto }}
+                style={{ width: 343, height: 240 }}
+              />
+            </TouchableOpacity>
+          </View>
 
-        <ScrollView>
           <KeyboardAvoidingView
             behavior={Platform.OS == "ios" ? "padding" : "height"}
           >
-            {comment && (
-              <View style={styles.containerComment}>
-                <UserAvatar style={styles.avatar} name="avatar" />
-                {/* <Text style={styles.avatarName}>{avatarName || "U"}</Text> */}
-                <View style={styles.comment}>
-                  <Text style={styles.commentText}>{comment}</Text>
-                  <Text style={styles.commentData}>09 июня, 2020 | 08:40</Text>
-                </View>
-              </View>
-            )}
+            <ScrollView style={styles.containerComment} horizontal={true}>
+              <FlatList
+                data={allComments}
+                renderItem={({ item }) => (
+                  <View style={styles.comment}>
+                    <UserAvatar style={styles.avatar} name={item.username} />
+                    <View style={styles.containerItem}>
+                      <Text style={styles.commentText}>{item.comment}</Text>
+                      <Text style={styles.commentData}>{item.data}</Text>
+                    </View>
+                  </View>
+                )}
+                keyExtractor={(item) => item.id}
+              />
+            </ScrollView>
+
             <View style={styles.form}>
+              {/* <View
+              style={{
+                ...styles.form,
+                marginBottom: isShowKeyboard ? 10 : 40,
+                marginTop: isShowKeyboard ? 20 : 10,
+              }}
+            > */}
               <TextInput
                 style={styles.input}
                 placeholder={"Комментировать..."}
                 value={comment}
-                // onChangeText={(value) =>
-                //   setState((prevState) => ({ ...prevState, comment: value }))
-                // }
-                // onChangeText={(value) =>
-                //   setComment((prevState) => ({ ...prevState, comment: value }))
-                // }
                 onChangeText={setComment}
                 autoCapitalize={"none"}
                 placeholderTextColor={comment ? "#212121" : "#BDBDBD"}
@@ -176,24 +289,36 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     // justifyContent: "center",
     marginTop: 32,
-    marginBottom: 16,
+    // marginBottom: 16,
     // marginBottom: 24,
     marginHorizontal: 16,
+    ///////////////////////
+    width: "100%",
   },
   avatar: {
-    alignItems: "flex-start",
+    alignItems: "flex-end",
     borderRadius: 100 / 2,
     backgroundColor: "#F6F6F6",
     width: 32,
     height: 32,
   },
   comment: {
-    alignItems: "flex-end",
+    // alignItems: "flex-start",
+    marginBottom: 24,
+    // backgroundColor: "rgba(0, 0, 0, 0.03)",
+    // padding: 16,
+    // marginLeft: 16,
+    // width: 299,
+    // height: 32,
+    // marginBottom: 24,
+    flexDirection: "row",
+  },
+  containerItem: {
+    alignItems: "flex-start",
     backgroundColor: "rgba(0, 0, 0, 0.03)",
     padding: 16,
     marginLeft: 16,
     width: 299,
-    // height: 32,
   },
   commentText: {
     color: "#212121",
@@ -212,11 +337,11 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     justifyContent: "flex-start",
     marginBottom: 16,
-    marginTop: 30,
+    marginTop: 24,
   },
   input: {
     height: 50,
-    // marginBottom: 16,
+    // marginBottom: 10,
     borderColor: "#E8E8E8",
     borderWidth: 1,
     backgroundColor: "#F6F6F6",

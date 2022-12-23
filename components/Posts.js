@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+  ScrollView,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
 export const Posts = ({ item }) => {
@@ -8,7 +15,7 @@ export const Posts = ({ item }) => {
   const handleClick = () => setNumber(number + 1);
 
   return (
-    <View style={styles.containerCreateScreen} key={item}>
+    <ScrollView style={styles.containerCreateScreen} key={item}>
       {/* <Image
           source={require("../assets/default_image.png")}
           style={styles.imageScreen}
@@ -52,7 +59,7 @@ export const Posts = ({ item }) => {
           </Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
@@ -60,6 +67,7 @@ const styles = StyleSheet.create({
   // Image
   containerCreateScreen: {
     marginTop: 22,
+    marginBottom: 10,
   },
   imageScreen: {
     height: 240,
