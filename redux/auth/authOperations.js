@@ -38,9 +38,19 @@ export const authSignUpUser =
       // console.log("user", user);
     } catch (error) {
       console.log("error", error);
+      console.log("error.code", error.code);
       console.log("error.message", error.message);
     }
   };
+
+// const invalidEmail = "";
+// const validPassword = "wowsuchsecureverysafepassword";
+// const user = await signInWithEmailAndPassword(
+//   auth,
+//   invalidEmail,
+//   validPassword
+// );
+
 export const authSignInUser =
   ({ email, password }) =>
   async (dispatch, getState) => {
@@ -49,6 +59,7 @@ export const authSignInUser =
       console.log("user", user);
     } catch (error) {
       console.log("error", error);
+      console.log("error.code", error.code);
       console.log("error.message", error.message);
     }
   };

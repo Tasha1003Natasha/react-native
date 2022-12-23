@@ -17,6 +17,12 @@ import {
 import { useDispatch } from "react-redux";
 import { authSignUpUser } from "../../redux/auth/authOperations";
 
+import * as ImagePicker from "expo-image-picker";
+// import { ImagePicker } from "react-native-image-picker";
+import { storage, db } from "../../firebase/config";
+import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
+import { collection, addDoc } from "firebase/firestore";
+
 const initialState = {
   username: "",
   email: "",
@@ -42,7 +48,6 @@ export const RegistrationScreen = ({ navigation }) => {
   const handleClick = () => setType("text");
 
   const [image, setImage] = useState(null);
-  const addImage = () => {};
 
   const [dimensions, setDimensions] = useState(
     Dimensions.get("window").width - 8 * 2
@@ -59,15 +64,77 @@ export const RegistrationScreen = ({ navigation }) => {
   }, []);
 
   const handleSubmit = () => {
+    console.log("state", state);
+    // e.preventDefault();
+    if (
+      state.username.trim() === "" ||
+      state.email.trim() === "" ||
+      state.password.trim() === ""
+    ) {
+      console.log("Please fill in all fields!");
+    }
+    // else if (password.length < 5) {
+    //   console.log("Passwords must be at least 5 characters long!");
+    // }
     Keyboard.dismiss();
     // console.log(state);
     dispatch(authSignUpUser(state));
     setState(initialState);
+    setImage("");
   };
 
   const keyboardHide = () => {
     Keyboard.dismiss();
   };
+  /////////////////////image////////////////////////////////
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    // console.log("result", result);
+
+    if (!result.canceled) {
+      const image = result.assets[0].uri;
+      console.log("image", image);
+      setImage(image);
+
+      // setImage(result.assets[0].uri);
+      // console.log("result.uri", result.assets[0].uri);
+      uploadImageAsync(image);
+      // uploadImageToServer();
+    }
+  };
+  ////////////Work/////////////////////////////////////////////////
+  async function uploadImageAsync(uri) {
+    const blob = await new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.onload = function () {
+        resolve(xhr.response);
+      };
+      xhr.onerror = function (e) {
+        console.log(e);
+        reject(new TypeError("Network request failed"));
+      };
+      xhr.responseType = "blob";
+      xhr.open("GET", uri, true);
+      xhr.send(null);
+    });
+
+    const blobId = blob.data.blobId;
+    const storageRef = ref(storage, `images/${blobId}`);
+    const uploadTask = uploadBytesResumable(storageRef, blob);
+    return uploadTask.then((snapshot) => {
+      // console.log("snapshot", snapshot)
+      return getDownloadURL(snapshot.ref).then((downloadURL) => {
+        // console.log("downloadURL", downloadURL);
+        return downloadURL;
+      });
+    });
+  }
 
   return (
     <TouchableWithoutFeedback onPress={keyboardHide}>
@@ -81,12 +148,17 @@ export const RegistrationScreen = ({ navigation }) => {
           >
             <View style={styles.form}>
               {/* /* Аватарка */}
-              <View style={styles.avatarSection}>
-                <TouchableOpacity onPress={addImage}>
+
+              <TouchableOpacity
+                style={styles.avatarSection}
+                onPress={pickImage}
+              >
+                <TouchableOpacity onPress={pickImage}>
+                  {/* /////Тут закінчила/////////////////////////// */}
                   {image && (
                     <Image
                       source={{ uri: image }}
-                      style={{ width: 132, height: 120 }}
+                      style={{ width: 120, height: 120, borderRadius: 16 }}
                     />
                   )}
                   <Image
@@ -98,7 +170,7 @@ export const RegistrationScreen = ({ navigation }) => {
                     style={image ? styles.avatarClose : styles.avatarAdd}
                   />
                 </TouchableOpacity>
-              </View>
+              </TouchableOpacity>
               <View
                 onLayout={() => setIsShowKeyboard(true)}
                 style={{

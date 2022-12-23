@@ -36,14 +36,21 @@ export const Posts = ({ item }) => {
             })
           }
         >
-          {number ? (
+          {item.comment ? (
             <Image source={require("../assets/message_circle.png")} />
           ) : (
             <Image source={require("../assets/message.png")} />
           )}
 
-          <Text style={styles.comment}>{number}</Text>
+          <Text style={styles.comment}>{item.comment.length}</Text>
         </TouchableOpacity>
+        {/* /////////////////////Лайк/////////////////////////////////////////// */}
+        {/* ProfileScreen */}
+        <TouchableOpacity style={styles.containerComment} onPress={handleClick}>
+          <Image source={require("../assets/thumbs_up.png")} />
+          <Text style={styles.likeText}>{number}</Text>
+        </TouchableOpacity>
+        {/* //////////////////////////////////////////////////////////////// */}
 
         <TouchableOpacity
           style={styles.containerMap}
@@ -112,5 +119,18 @@ const styles = StyleSheet.create({
   },
   iconMap: {
     marginRight: 3,
+  },
+  // comment
+  containerComment: {
+    flex: 1,
+    flexDirection: "row",
+    paddingHorizontal: 16,
+    marginBottom: 32,
+  },
+  likeText: {
+    marginLeft: 6,
+    color: "#212121",
+    fontSize: 16,
+    fontFamily: "Roboto-Regular",
   },
 });

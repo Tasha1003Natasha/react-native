@@ -24,7 +24,6 @@ initializeAuth(app, {
   persistence: getReactNativePersistence(AsyncStorage),
 });
 
-// const db = getFirestore(app);
 const db = getFirestore(app);
 const auth = getAuth(app);
 const storage = getStorage(app);

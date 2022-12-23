@@ -25,8 +25,8 @@ import { useSelector } from "react-redux";
 import { Posts } from "../../components/Posts";
 
 export const ProfileScreen = () => {
-  const [number, setNumber] = useState(0);
-  const handleClick = () => setNumber(number + 1);
+  // const [number, setNumber] = useState(0);
+  // const handleClick = () => setNumber(number + 1);
   //////////////////Аватарка///////////////////////
   const [image, setImage] = useState(null);
   const addImage = () => {};
@@ -55,16 +55,6 @@ export const ProfileScreen = () => {
     });
     return () => querySnapshot();
   };
-  ///////////////////////////////////////
-  // const getItem = (userPosts, index) => ({
-  //   id: Math.random().toString().substring(0),
-  //   title: `Item ${index + 1}`,
-  // });
-
-  // const getItemCount = (userPosts) => 1;
-  // console.log("getItemCount", getItemCount);
-
-  ///////////////////////////////////////
 
   const signOut = () => {
     dispach(authSignOutUser());
@@ -246,27 +236,12 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
   },
 
-  // post: {
-  //   flex: 1,
-  //   paddingHorizontal: 16,
-  //   alignItems: "center",
-  // },
-  // containerImage: {
-  //   flexDirection: "row",
-  // },
   form: {
     backgroundColor: "#FFFFFF",
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
     alignItems: "center",
     position: "relative",
-    //////////////////////////
-    // marginTop: 190,
-    //////////////////////////
-    // justifyContent: "flex-start",
-    // flex: 1,
-    // alignItems: "flex-end",
-    // marginTop: 190,
   },
   containerLogout: {
     alignItems: "baseline",
@@ -306,7 +281,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   // Image
-  ///////////////розкоментувала////////////////
+
   containerCreateScreen: {
     paddingHorizontal: 16,
     // marginTop: 32,
@@ -327,7 +302,7 @@ const styles = StyleSheet.create({
     // alignItems: "center",
     ///////////////////////////////////
     // width: 343,
-    height: 300,
+    height: 350,
   },
   // Posts
   containerScreen: {
