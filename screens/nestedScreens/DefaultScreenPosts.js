@@ -17,15 +17,20 @@ import { useDispatch, useSelector } from "react-redux";
 import { authSignOutUser } from "../../redux/auth/authOperations";
 
 import { storage, db } from "../../firebase/config";
-
 import { collection, onSnapshot, query } from "firebase/firestore";
 
 export const DefaultScreenPosts = ({ route }) => {
+  const allComments = route.params?.allComments;
+  // console.log("allComments", allComments);
+  // console.log("route.params", route.params);
+  // console.log("route.params", route.params?.allComments);
+
   const [posts, setPosts] = useState([]);
   // console.log("route.params", route.params);
   const dispach = useDispatch();
   const userName = useSelector((state) => state.auth.username);
   const userEmail = useSelector((state) => state.auth.email);
+  const avatarURL = useSelector((state) => state.auth.avatarURL);
 
   const signOut = () => {
     dispach(authSignOutUser());
@@ -52,15 +57,6 @@ export const DefaultScreenPosts = ({ route }) => {
     getAllPost();
   }, []);
 
-  //////////////////////////////
-
-  // useEffect(() => {
-  //   if (route.params) {
-  //     setPosts((prevState) => [...prevState, route.params]);
-  //   }
-  // }, [route.params]);
-  // console.log("posts", posts);
-
   return (
     <View style={styles.container}>
       <View style={styles.containerPosts}>
@@ -76,10 +72,17 @@ export const DefaultScreenPosts = ({ route }) => {
 
       <View style={styles.section}>
         <View style={styles.containerImage}>
-          <ImageBackground
-            source={require("../../assets/defult.png")}
-            style={styles.image}
-          ></ImageBackground>
+          {avatarURL ? (
+            <ImageBackground
+              source={{ uri: avatarURL }}
+              style={styles.image}
+            ></ImageBackground>
+          ) : (
+            <ImageBackground
+              source={require("../../assets/defult.png")}
+              style={styles.image}
+            ></ImageBackground>
+          )}
 
           <View style={styles.containerUser}>
             <Text style={styles.textUser}>{userName}</Text>
@@ -93,7 +96,9 @@ export const DefaultScreenPosts = ({ route }) => {
         <FlatList
           data={posts}
           keyExtractor={(item, indx) => indx.toString()}
-          renderItem={({ item }) => <Posts item={item} />}
+          renderItem={({ item }) => (
+            <Posts item={item} allComments={allComments} />
+          )}
         />
       </View>
       {/* 
@@ -101,7 +106,7 @@ export const DefaultScreenPosts = ({ route }) => {
         <Posts posts={posts} />
       </View> */}
 
-      <Toolbar />
+      <Toolbar allComments={allComments} />
     </View>
   );
 };

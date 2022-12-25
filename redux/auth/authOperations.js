@@ -10,38 +10,48 @@ import {
 import { authSlice } from "./authReducer";
 const { updateUserProfile, authStateChange, authSignOut } = authSlice.actions;
 
-export const authSignUpUser =
-  ({ email, password, username }) =>
-  async (dispatch, getState) => {
-    try {
-      const { user } = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
+export const authSignUpUser = (
+  { email: userEmail, password, username },
+  avatarImage
+) =>
+  console.log(
+    "authSignUpUser",
+    { email: userEmail, password, username },
+    avatarImage
+  );
+async (dispatch, getState) => {
+  try {
+    const { user } = await createUserWithEmailAndPassword(
+      auth,
+      userEmail,
+      password
+    );
+    console.log("user", { user });
 
-      await updateProfile(user, {
-        displayName: username,
-        email: email,
-      });
-      // console.log(" updateProfile", updateProfile);
+    await updateProfile(user, {
+      displayName: username,
+      email: userEmail,
+      photoURL: avatarImage,
+    });
+    // console.log(" updateProfile", updateProfile);
 
-      const { displayName, uid, email } = auth.currentUser;
+    const { displayName, uid, email, photoURL } = auth.currentUser;
 
-      const userUpdateProfile = {
-        username: displayName,
-        userId: uid,
-        email: email,
-      };
+    const userUpdateProfile = {
+      username: displayName,
+      userId: uid,
+      email,
+      avatarURL: photoURL,
+    };
 
-      // dispatch(updateUserProfile(userUpdateProfile));
-      // console.log("user", user);
-    } catch (error) {
-      console.log("error", error);
-      console.log("error.code", error.code);
-      console.log("error.message", error.message);
-    }
-  };
+    dispatch(updateUserProfile(userUpdateProfile));
+    console.log("user", user);
+  } catch (error) {
+    console.log("error", error);
+    console.log("error.code", error.code);
+    console.log("error.message", error.message);
+  }
+};
 
 // const invalidEmail = "";
 // const validPassword = "wowsuchsecureverysafepassword";
@@ -69,12 +79,14 @@ export const authSignOutUser = () => async (dispatch, getState) => {
 };
 
 export const authStateChangeUser = () => async (dispatch, getState) => {
-  await auth.onAuthStateChanged((user) => {
+  onAuthStateChanged(auth, (user) => {
+    // auth.onAuthStateChanged((user) => {
     if (user) {
       const userUpdateProfile = {
         username: user.displayName,
         userId: user.uid,
         email: user.email,
+        avatarURL: user.photoURL,
       };
 
       dispatch(updateUserProfile(userUpdateProfile));

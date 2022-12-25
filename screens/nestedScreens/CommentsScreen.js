@@ -27,6 +27,8 @@ export const CommentsScreen = ({ route }) => {
   const { uploadPhoto } = route.params;
   const [comment, setComment] = useState("");
   const [allComments, setAllComments] = useState([]);
+  const number = allComments.length;
+
   const navigation = useNavigation();
   //////////////Keyboard/////////////////
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
@@ -116,6 +118,10 @@ export const CommentsScreen = ({ route }) => {
     return data;
   };
 
+  const sendComment = () => {
+    createPost(), setComment("");
+  };
+
   const createPost = async () => {
     const data = await showTime();
     // console.log("data", data);
@@ -151,7 +157,13 @@ export const CommentsScreen = ({ route }) => {
       <View style={styles.container}>
         <View style={styles.containerPosts}>
           <TouchableOpacity
-            onPress={() => navigation.navigate("DefaultScreen")}
+            onPress={() =>
+              navigation.navigate("DefaultScreen", {
+                allComments: number,
+              })
+            }
+
+            // onPress={() => navigation.navigate("DefaultScreen")}
           >
             <Image
               source={require("../../assets/arrow_left.png")}
@@ -220,7 +232,8 @@ export const CommentsScreen = ({ route }) => {
                 // onFocus={() => setIsShowKeyboard(true)}
               />
 
-              <TouchableOpacity style={styles.send} onPress={createPost}>
+              {/* <TouchableOpacity style={styles.send} onPress={createPost}   > */}
+              <TouchableOpacity style={styles.send} onPress={sendComment}>
                 <Image source={require("../../assets/send.png")} />
               </TouchableOpacity>
             </View>

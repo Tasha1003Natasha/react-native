@@ -14,41 +14,68 @@ import {
 } from "react-native";
 import { Toolbar } from "../../components/Toolbar";
 
+import * as ImagePicker from "expo-image-picker";
 // import { auth } from "../../firebase/config";
 // import { signOut } from "firebase/auth";
 import { useDispatch } from "react-redux";
 import { authSignOutUser } from "../../redux/auth/authOperations";
 //////////////////////////////////////////////////////////
-import { db } from "../../firebase/config";
-import { collection, doc, query, onSnapshot, where } from "firebase/firestore";
+import { storage, db } from "../../firebase/config";
+import { collection, ref, query, onSnapshot, where } from "firebase/firestore";
 import { useSelector } from "react-redux";
 import { Posts } from "../../components/Posts";
 
-export const ProfileScreen = () => {
+export const ProfileScreen = ({ route }) => {
+  const allComments = route.params?.allComments;
+  // console.log("allComments", allComments);
   // const [number, setNumber] = useState(0);
   // const handleClick = () => setNumber(number + 1);
-  //////////////////Аватарка///////////////////////
-  const [image, setImage] = useState(null);
-  const addImage = () => {};
+
   ////////////////////////////////////////////////////////////
   // const { uploadPhoto } = route.params;
   // console.log("uploadPhoto", uploadPhoto);
-  const { userId } = useSelector((state) => state.auth);
+  const { userId, avatarURL } = useSelector((state) => state.auth);
   // console.log("userId", userId);
+  console.log("avatarURL", avatarURL);
+
   const { username } = useSelector((state) => state.auth);
   const [userPosts, setUserPosts] = useState([]);
-
   const dispach = useDispatch();
-  ////////////////////Перевірити////////////////////////
+
+  //////////////////Аватарка///////////////////////
+  const [image, setImage] = useState(null);
+  // console.log("image", image);
+
+  const removeImage = () => {
+    setImage(null);
+  };
+
+  /////////////////////Додати нову аватарку ////////////////////////////////
+  const addImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    console.log("result", result);
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
+      // console.log("result.uri", result.assets[0].uri);
+    }
+  };
+
+  ////////////////////Пости///////////////////////
   const getUserPosts = async () => {
     const colRef = collection(db, "posts");
     const q = query(colRef, where("userId", "==", userId));
     const querySnapshot = onSnapshot(q, (snapshot) => {
-      // console.log("snapshot", snapshot);
+      console.log("snapshotUser", snapshot);
       let userPosts = [];
-      console.log("userPosts", userPosts);
+      // console.log("userPosts", userPosts);
       snapshot.docs.forEach((doc) => {
-        console.log("user.data", doc.data());
+        // console.log("user.data", doc.data());
         userPosts.push({ ...doc.data() });
       });
       setUserPosts(userPosts);
@@ -59,8 +86,6 @@ export const ProfileScreen = () => {
   const signOut = () => {
     dispach(authSignOutUser());
   };
-  //   const userName = useSelector(state => state.user?.user?.email);
-  //
 
   const [dimensions, setDimensions] = useState(
     Dimensions.get("window").width - 8 * 2
@@ -98,20 +123,31 @@ export const ProfileScreen = () => {
                 />
               </TouchableOpacity>
             </View>
+
             {/* /* Аватарка */}
-            <View style={styles.avatarSection}>
-              <TouchableOpacity onPress={addImage}>
+            <TouchableOpacity
+              style={styles.avatarSection}
+              onPress={avatarURL && removeImage}
+            >
+              <TouchableOpacity onPress={avatarURL && removeImage}>
                 <Image
-                  source={{ uri: image }}
+                  source={{ uri: avatarURL }}
                   style={{ width: 132, height: 120 }}
                 />
-
                 <Image
                   source={require("../../assets/close.png")}
                   style={styles.avatarClose}
                 />
+                {/* <Image
+                  source={
+                    image
+                      ? require("../../assets/close.png")
+                      : require("../../assets/add.png")
+                  }
+                  style={image ? styles.avatarClose : styles.avatarAdd}
+                /> */}
               </TouchableOpacity>
-            </View>
+            </TouchableOpacity>
             {/* ///////Posts////////////// */}
 
             {/* ////////////Тут закінчила///////////////////////// */}
@@ -139,36 +175,17 @@ export const ProfileScreen = () => {
               /> */}
             {/* </SafeAreaView> */}
 
-            {/* //////////////////////// */}
-            {/* <ScrollView nestedScrollEnabled={true} style={{ width: "100%" }}>
-              <ScrollView style={styles.containerPostScreen} horizontal={true}>
-                <FlatList
-                  data={userPosts}
-                  keyExtractor={(item, id) => id.toString()}
-                  renderItem={({ item }) => <Posts item={item} />}
-                />
-              </ScrollView>
-            </ScrollView> */}
-
             <SafeAreaView style={styles.containerPostScreen}>
               <FlatList
                 data={userPosts}
                 snapToStart={true}
                 snapToInterval={1}
                 keyExtractor={(item, id) => id.toString()}
-                renderItem={({ item }) => <Posts item={item} />}
+                renderItem={({ item }) => (
+                  <Posts item={item} allComments={allComments} />
+                )}
               />
             </SafeAreaView>
-            {/* //////////////////////////////////////////// */}
-            {/* <SafeAreaView style={styles.containerPostScreen}>
-              <FlatList
-                data={userPosts}
-                keyExtractor={(item, id) => id.toString()}
-                renderItem={({ item }) => <Posts item={item} />}
-              />
-            </SafeAreaView> */}
-
-            {/* ///////////////////////////////////////////////////////// */}
 
             {/* <View>
               <FlatList
@@ -270,6 +287,12 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 100,
     left: 30,
+    transform: [{ translateY: -30 }, { translateX: 70 }],
+  },
+  avatarAdd: {
+    position: "absolute",
+    top: 100,
+    left: 35,
     transform: [{ translateY: -30 }, { translateX: 70 }],
   },
   userName: {

@@ -13,10 +13,10 @@ export const Main = () => {
 
   useEffect(() => {
     dispach(authStateChangeUser());
-  }, []);
+  }, [stateChange]);
 
   const routing = useRoute(stateChange);
-  useEffect(() => {}, []);
+  // useEffect(() => {}, []);
 
   const [fontsLoaded] = useFonts({
     "Roboto-Regular": require("../assets/fonts/Roboto-Regular.ttf"),

@@ -9,7 +9,10 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
-export const Posts = ({ item }) => {
+export const Posts = ({ item, allComments }) => {
+  // console.log("item", item);
+  // console.log("allComments", allComments);
+
   const navigation = useNavigation();
   const [number, setNumber] = useState(0);
   const handleClick = () => setNumber(number + 1);
@@ -36,13 +39,13 @@ export const Posts = ({ item }) => {
             })
           }
         >
-          {item.comment ? (
+          {allComments ? (
             <Image source={require("../assets/message_circle.png")} />
           ) : (
             <Image source={require("../assets/message.png")} />
           )}
 
-          <Text style={styles.comment}>{item.comment.length}</Text>
+          <Text style={styles.comment}>{allComments ? allComments : 0}</Text>
         </TouchableOpacity>
         {/* /////////////////////Лайк/////////////////////////////////////////// */}
         {/* ProfileScreen */}

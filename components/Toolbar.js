@@ -1,7 +1,8 @@
 import { View, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
-export const Toolbar = () => {
+export const Toolbar = ({ allComments }) => {
+  console.log("allComments", allComments);
   const navigation = useNavigation();
 
   return (
@@ -19,7 +20,15 @@ export const Toolbar = () => {
           <Image source={require("../assets/new.png")} style={styles.toolbar} />
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
+        {/* <TouchableOpacity onPress={() => navigation.navigate("Profile")}> */}
+
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate("Profile", {
+              allComments: allComments,
+            })
+          }
+        >
           <Image source={require("../assets/user.png")} />
         </TouchableOpacity>
       </View>
