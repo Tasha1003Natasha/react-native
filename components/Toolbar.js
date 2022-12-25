@@ -2,7 +2,6 @@ import { View, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
 export const Toolbar = ({ allComments }) => {
-  console.log("allComments", allComments);
   const navigation = useNavigation();
 
   return (

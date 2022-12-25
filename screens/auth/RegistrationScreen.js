@@ -19,9 +19,8 @@ import { authSignUpUser } from "../../redux/auth/authOperations";
 
 import * as ImagePicker from "expo-image-picker";
 
-import { storage, db } from "../../firebase/config";
+import { storage } from "../../firebase/config";
 import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
-import { collection, addDoc } from "firebase/firestore";
 
 const initialState = {
   username: "",
@@ -67,13 +66,7 @@ export const RegistrationScreen = ({ navigation }) => {
   }, []);
 
   const handleSubmit = async () => {
-    console.log("state", state);
-
     const avatarImage = await uploadAvatarToServer();
-    // console.log("avatarImg", avatarImg);
-
-    // const avatarImg = await uploadAvatarToServer();
-    // e.preventDefault();
     if (
       state.username.trim() === "" ||
       state.useremail.trim() === "" ||
@@ -81,17 +74,11 @@ export const RegistrationScreen = ({ navigation }) => {
     ) {
       return "Please fill in all fields!";
     }
-    // else if (password.length < 5) {
-    //   console.log("Passwords must be at least 5 characters long!");
-    // }
+
     Keyboard.dismiss();
-    // console.log(state);
-    // dispatch(authSignUpUser(state));
     dispatch(authSignUpUser(state, avatarImage));
     setState(initialState);
     setImage("");
-
-    // uploadImageAsync(image);
   };
 
   const keyboardHide = () => {
@@ -105,43 +92,10 @@ export const RegistrationScreen = ({ navigation }) => {
       aspect: [4, 3],
       quality: 1,
     });
-
-    console.log("result", result);
     if (!result.canceled) {
       setImage(result.assets[0].uri);
-      // console.log("result.uri", result.assets[0].uri);
     }
   };
-  ////////////Work/////////////////////////////////////////////////
-  // async function uploadImageAsync(uri) {
-  //   console.log("uri", uri);
-
-  //   const blob = await new Promise((resolve, reject) => {
-  //     const xhr = new XMLHttpRequest();
-  //     xhr.onload = function () {
-  //       resolve(xhr.response);
-  //     };
-  //     xhr.onerror = function (e) {
-  //       console.log(e);
-  //       reject(new TypeError("Network request failed"));
-  //     };
-  //     xhr.responseType = "blob";
-  //     xhr.open("GET", uri, true);
-  //     xhr.send(null);
-  //   });
-
-  //   const blobId = blob.data.blobId;
-  //   const storageRef = ref(storage, `images/${blobId}`);
-  //   const uploadTask = uploadBytesResumable(storageRef, blob);
-  //   return uploadTask.then((snapshot) => {
-  //     // console.log("snapshot", snapshot)
-  //     return getDownloadURL(snapshot.ref).then((downloadURL) => {
-  //       // console.log("downloadURL", downloadURL);
-  //       setImage(downloadURL);
-  //       return downloadURL;
-  //     });
-  //   });
-  // }
 
   /////////////////////AvatarToServer//////////////////
   function urlToBlob(image) {
@@ -154,7 +108,7 @@ export const RegistrationScreen = ({ navigation }) => {
         }
       });
       xhr.open("GET", image);
-      xhr.responseType = "blob"; // convert type
+      xhr.responseType = "blob";
       xhr.send();
     });
   }
@@ -165,13 +119,10 @@ export const RegistrationScreen = ({ navigation }) => {
     const blobId = blob.data.blobId;
     const storageRef = ref(storage, `postImage/${blobId}`);
     const uploadTask = uploadBytesResumable(storageRef, blob);
-    // console.log("uploadTask", uploadTask);
 
     ///////////////////////////////////////Отримання посилання
     return uploadTask.then((snapshot) => {
-      // console.log("snapshot", snapshot)
       return getDownloadURL(snapshot.ref).then((downloadURL) => {
-        // console.log("downloadURL", downloadURL);
         return downloadURL;
       });
     });
@@ -189,13 +140,11 @@ export const RegistrationScreen = ({ navigation }) => {
           >
             <View style={styles.form}>
               {/* /* Аватарка */}
-
               <TouchableOpacity
                 style={styles.avatarSection}
                 onPress={!image ? addImage : removeImage}
               >
                 <TouchableOpacity onPress={!image ? addImage : removeImage}>
-                  {/* /////Тут закінчила/////////////////////////// */}
                   {image && (
                     <Image
                       source={{ uri: image }}
@@ -264,7 +213,6 @@ export const RegistrationScreen = ({ navigation }) => {
 
                 <TouchableOpacity
                   onPress={handleSubmit}
-                  // onPress={home}
                   activeOpacity={0.8}
                   style={styles.button}
                 >

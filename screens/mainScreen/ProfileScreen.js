@@ -14,56 +14,24 @@ import {
 } from "react-native";
 import { Toolbar } from "../../components/Toolbar";
 
-import * as ImagePicker from "expo-image-picker";
-// import { auth } from "../../firebase/config";
-// import { signOut } from "firebase/auth";
 import { useDispatch } from "react-redux";
 import { authSignOutUser } from "../../redux/auth/authOperations";
 //////////////////////////////////////////////////////////
-import { storage, db } from "../../firebase/config";
-import { collection, ref, query, onSnapshot, where } from "firebase/firestore";
+import { db } from "../../firebase/config";
+import { collection, query, onSnapshot, where } from "firebase/firestore";
 import { useSelector } from "react-redux";
 import { Posts } from "../../components/Posts";
 
 export const ProfileScreen = ({ route }) => {
   const allComments = route.params?.allComments;
-  // console.log("allComments", allComments);
-  // const [number, setNumber] = useState(0);
-  // const handleClick = () => setNumber(number + 1);
-
-  ////////////////////////////////////////////////////////////
-  // const { uploadPhoto } = route.params;
-  // console.log("uploadPhoto", uploadPhoto);
-  const { userId, avatarURL } = useSelector((state) => state.auth);
-  // console.log("userId", userId);
-  console.log("avatarURL", avatarURL);
-
-  const { username } = useSelector((state) => state.auth);
+  const { userId, avatarURL, username } = useSelector((state) => state.auth);
   const [userPosts, setUserPosts] = useState([]);
   const dispach = useDispatch();
 
-  //////////////////Аватарка///////////////////////
+  //////////////////Аватарка!!!!!///////////////////////
   const [image, setImage] = useState(null);
-  // console.log("image", image);
-
   const removeImage = () => {
     setImage(null);
-  };
-
-  /////////////////////Додати нову аватарку ////////////////////////////////
-  const addImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-
-    console.log("result", result);
-    if (!result.canceled) {
-      setImage(result.assets[0].uri);
-      // console.log("result.uri", result.assets[0].uri);
-    }
   };
 
   ////////////////////Пости///////////////////////
@@ -71,11 +39,8 @@ export const ProfileScreen = ({ route }) => {
     const colRef = collection(db, "posts");
     const q = query(colRef, where("userId", "==", userId));
     const querySnapshot = onSnapshot(q, (snapshot) => {
-      console.log("snapshotUser", snapshot);
       let userPosts = [];
-      // console.log("userPosts", userPosts);
       snapshot.docs.forEach((doc) => {
-        // console.log("user.data", doc.data());
         userPosts.push({ ...doc.data() });
       });
       setUserPosts(userPosts);
@@ -127,13 +92,14 @@ export const ProfileScreen = ({ route }) => {
             {/* /* Аватарка */}
             <TouchableOpacity
               style={styles.avatarSection}
-              onPress={avatarURL && removeImage}
+              onPress={!avatarURL && removeImage}
             >
-              <TouchableOpacity onPress={avatarURL && removeImage}>
+              <TouchableOpacity onPress={!avatarURL && removeImage}>
                 <Image
                   source={{ uri: avatarURL }}
-                  style={{ width: 132, height: 120 }}
+                  style={{ width: 120, height: 120, borderRadius: 16 }}
                 />
+
                 <Image
                   source={require("../../assets/close.png")}
                   style={styles.avatarClose}
@@ -150,32 +116,12 @@ export const ProfileScreen = ({ route }) => {
             </TouchableOpacity>
             {/* ///////Posts////////////// */}
 
-            {/* ////////////Тут закінчила///////////////////////// */}
-            {/* <ScrollView nestedScrollEnabled={true} style={{ width: "100%" }}>
-              <ScrollView style={styles.containerPostScreen} horizontal={true}> */}
-            {/* <SafeAreaView style={styles.containerPostScreen}> */}
-            {/* <VirtualizedList
-                data={userPosts}
-                // initialNumToRender={1}
-                // maxToRenderPerBatch={1}
-                // keyExtractor={(item) => item.key}
-
-                initialScrollIndex={1}
-                getItemLayout={(data, index) => ({
-                  offset: 240 * index,
-                  length: 240,
-                  index,
-                })}
-                keyExtractor={(index) => index.toString()}
-                getItem={(data, index) => data[index]}
-                getItemCount={(data) => data.length}
-                // getItemCount={getItemCount}
-                // getItem={getItem}
-                renderItem={({ item }) => <Posts item={item} />}
-              /> */}
-            {/* </SafeAreaView> */}
-
-            <SafeAreaView style={styles.containerPostScreen}>
+            <SafeAreaView
+              style={{
+                ...styles.containerPostScreen,
+                height: userPosts ? 350 : 0,
+              }}
+            >
               <FlatList
                 data={userPosts}
                 snapToStart={true}
@@ -187,52 +133,6 @@ export const ProfileScreen = ({ route }) => {
               />
             </SafeAreaView>
 
-            {/* <View>
-              <FlatList
-                data={userPosts}
-                keyExtractor={(item, id) => id.toString()}
-                renderItem={({ item }) => (
-                  <View style={styles.containerPostScreen} key={item.id}>
-                    <Image
-                      source={{ uri: item.uploadPhoto }}
-                      style={styles.imageScreen}
-                    />
-
-                    <Text style={styles.textScreen}>{item.state.name}</Text>
-                  </View>
-                )}
-              />
-            </View> */}
-
-            {/* <View style={styles.containerCreateScreen}>
-                <Image source={require("../../assets/default_image.png")} />
-              </View>
-              <Text style={styles.textScreen}>{username}</Text> */}
-
-            {/* <View style={styles.containerPostScreen}>
-              <TouchableOpacity style={styles.containerComment}>
-                <Image source={require("../../assets/message_circle.png")} />
-                <Text style={styles.comment}>Number</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={styles.containerComment}
-                onPress={handleClick}
-              >
-                <Image source={require("../../assets/thumbs_up.png")} />
-                <Text style={styles.likeText}>{number}</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity style={styles.containerMap}>
-                <Image
-                  source={require("../../assets/map.png")}
-                  style={styles.iconMap}
-                />
-                <Text style={styles.terrainScreen}>Terrain...</Text>
-              </TouchableOpacity>
-            </View> */}
-            {/* </ScrollView>  */}
-            {/* //////////////////////////////////////// */}
             <Toolbar />
           </View>
         </View>
@@ -304,7 +204,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   // Image
-
   containerCreateScreen: {
     paddingHorizontal: 16,
     // marginTop: 32,
@@ -316,16 +215,12 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#E8E8E8",
   },
-  ///////////////////////////////
-
+  ////////////////Post///////////////
   containerPostScreen: {
     paddingHorizontal: 16,
     flexDirection: "row",
     marginTop: 10,
-    // alignItems: "center",
-    ///////////////////////////////////
-    // width: 343,
-    height: 350,
+    // height: 350,
   },
   // Posts
   containerScreen: {
@@ -335,48 +230,5 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     borderWidth: 1,
     borderColor: "#E8E8E8",
-    // marginTop: 32,
-  },
-  textScreen: {
-    color: "#212121",
-    marginTop: 8,
-    fontSize: 16,
-    fontFamily: "Roboto-Medium",
-    // marginHorizontal: 16,
-  },
-  // comment
-  containerComment: {
-    flex: 1,
-    flexDirection: "row",
-    paddingHorizontal: 16,
-    marginBottom: 32,
-  },
-  comment: {
-    marginLeft: 6,
-    color: "#212121",
-    fontSize: 16,
-    fontFamily: "Roboto-Regular",
-    marginRight: 24,
-  },
-  likeText: {
-    marginLeft: 6,
-    color: "#212121",
-    fontSize: 16,
-    fontFamily: "Roboto-Regular",
-  },
-  // map
-  containerMap: {
-    flexDirection: "row",
-    textAlign: "left",
-    marginRight: 16,
-  },
-  terrainScreen: {
-    color: "#212121",
-    fontSize: 16,
-    fontFamily: "Roboto-Regular",
-    textDecorationLine: "underline",
-  },
-  iconMap: {
-    marginRight: 3,
   },
 });

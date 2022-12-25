@@ -11,7 +11,6 @@ import {
   Keyboard,
   ScrollView,
 } from "react-native";
-// import { useNavigation } from "@react-navigation/native";
 import { Camera } from "expo-camera";
 import * as MediaLibrary from "expo-media-library";
 import { useIsFocused } from "@react-navigation/native";
@@ -43,11 +42,6 @@ export const CreateScreen = ({ navigation }) => {
   const isFocused = useIsFocused();
   //////////////disabled//////////////////
   const [isDisabled, setIsDisabled] = useState(false);
-  // image
-  // const [image, setImage] = useState(null);
-  // const addImage = () => {};
-  //////////////Keyboard/////////////////
-  const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   //////////////location////////////////
   const [location, setLocation] = useState(null);
   //////////////comment////////////////
@@ -85,13 +79,10 @@ export const CreateScreen = ({ navigation }) => {
   const takePhoto = async () => {
     const { uri } = await camera.takePictureAsync();
     setPhoto(uri);
-    // console.log("uri ", uri);
   };
 
   const sendPhoto = async () => {
-    // uploadPhotoToServer();
     uploadPostToServer();
-    // console.log("navigation", navigation);
     // navigation.navigate("DefaultScreen", { photo });
     navigation.navigate("DefaultScreen");
     setPhoto(null);
@@ -118,7 +109,7 @@ export const CreateScreen = ({ navigation }) => {
         }
       });
       xhr.open("GET", photo);
-      xhr.responseType = "blob"; // convert type
+      xhr.responseType = "blob";
       xhr.send();
     });
   }
@@ -129,13 +120,10 @@ export const CreateScreen = ({ navigation }) => {
     const blobId = blob.data.blobId;
     const storageRef = ref(storage, `postImage/${blobId}`);
     const uploadTask = uploadBytesResumable(storageRef, blob);
-    // console.log("uploadTask", uploadTask);
 
     ///////////////////////////////////////Отримання посилання на зроблену фотографію
     return uploadTask.then((snapshot) => {
-      // console.log("snapshot", snapshot)
       return getDownloadURL(snapshot.ref).then((downloadURL) => {
-        // console.log("downloadURL", downloadURL);
         return downloadURL;
       });
     });
@@ -144,18 +132,15 @@ export const CreateScreen = ({ navigation }) => {
   ///////////////////Post// upload Post To Server ////////////////////////////
   const uploadPostToServer = async () => {
     const uploadPhoto = await uploadPhotoToServer();
-    // console.log("uploadPhoto", uploadPhoto);
 
     const docData = {
       uploadPhoto,
       state,
-      // location: location.coords,
       location,
       userId,
       username,
       comment,
     };
-    console.log("docData", docData);
     const createPost = addDoc(collection(db, "posts"), docData);
   };
 
@@ -248,14 +233,6 @@ export const CreateScreen = ({ navigation }) => {
             )}
           </TouchableOpacity>
 
-          {/* <TouchableOpacity onPress={addImage}>
-            {image ? (
-              <Text style={styles.textScreen}>Редактировать фото</Text>
-            ) : (
-              <Text style={styles.textScreen}>Загрузите фото</Text>
-            )}
-          </TouchableOpacity> */}
-
           <KeyboardAvoidingView
             behavior={Platform.OS == "ios" ? "padding" : "height"}
           >
@@ -326,7 +303,6 @@ export const CreateScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  // /////////////////////
   container: {
     flex: 1,
     backgroundColor: "#FFFFFF",

@@ -3,26 +3,14 @@ import { View, StyleSheet, Dimensions } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 
 export const MapScreen = ({ route }) => {
-  // console.log("route.params.location", route.params.location);
-  const { longitude, latitude } = route.params.location;
-  // const [mapInitialized, setMapInitialized] = useState(false);
+  const { longitude, latitude } = route.params?.location;
   const [mapRegion, setMapRegion] = useState(null);
 
-  // const onMapReady = async () => {
-  //   if (mapInitialized) {
-  //     return;
-  //   }
-  //   setMapInitialized(true);
-  // };
-
   const handleMapRegionChange = (mapRegion) => {
-    // console.log(mapRegion);
     setMapRegion({ mapRegion });
   };
 
   return (
-    // <View style={styles.container} onPress={onMapReady}>
-    // <View style={styles.container} onPress={onMapReady}>
     <View style={styles.container}>
       <MapView
         style={styles.map}
@@ -49,9 +37,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   map: {
-    // position: "absolute",
     width: Dimensions.get("window").width,
     height: Dimensions.get("window").height,
-    // flex: 1,
   },
 });

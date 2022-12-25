@@ -10,23 +10,20 @@ import {
 import { useNavigation } from "@react-navigation/native";
 
 export const Posts = ({ item, allComments }) => {
-  // console.log("item", item);
-  // console.log("allComments", allComments);
-
   const navigation = useNavigation();
   const [number, setNumber] = useState(0);
   const handleClick = () => setNumber(number + 1);
 
   return (
     <ScrollView style={styles.containerCreateScreen} key={item}>
+      <Image source={{ uri: item.uploadPhoto }} style={styles.imageScreen} />
       {/* <Image
           source={require("../assets/default_image.png")}
           style={styles.imageScreen}
         /> */}
-      <Image source={{ uri: item.uploadPhoto }} style={styles.imageScreen} />
 
       <Text style={styles.textScreen}>
-        {item.state.name ? item.state.name : "Name"}
+        {item?.state.name ? item.state.name : "Name"}
       </Text>
 
       <View style={styles.containerPostScreen}>
@@ -58,14 +55,12 @@ export const Posts = ({ item, allComments }) => {
         <TouchableOpacity
           style={styles.containerMap}
           onPress={() => {
-            navigation.navigate("Map", { location: item.location.coords });
-            // const locationAll = item.location.coords;
-            // console.log("locationAll", locationAll);
+            navigation.navigate("Map", { location: item.location?.coords });
           }}
         >
           <Image source={require("../assets/map.png")} style={styles.iconMap} />
           <Text style={styles.terrainScreen}>
-            {item.state.terrain ? item.state.terrain : "Terrain.."}
+            {item?.state.terrain ? item.state.terrain : "Terrain.."}
           </Text>
         </TouchableOpacity>
       </View>

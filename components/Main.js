@@ -16,7 +16,6 @@ export const Main = () => {
   }, [stateChange]);
 
   const routing = useRoute(stateChange);
-  // useEffect(() => {}, []);
 
   const [fontsLoaded] = useFonts({
     "Roboto-Regular": require("../assets/fonts/Roboto-Regular.ttf"),

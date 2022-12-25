@@ -28,10 +28,6 @@ export const LoginScreen = ({ navigation }) => {
     navigation.navigate("Registration");
   };
 
-  // const home = () => {
-  //   navigation.navigate("Home");
-  // };
-
   const [state, setState] = useState(initialState);
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [type, setType] = useState(false);
@@ -51,16 +47,13 @@ export const LoginScreen = ({ navigation }) => {
   }, []);
 
   const handleSubmit = () => {
-    // console.log("click");
     Keyboard.dismiss();
-    // console.log(state);
     dispatch(authSignInUser(state));
     setState(initialState);
   };
 
   const keyboardHide = () => {
     Keyboard.dismiss();
-    // setIsShowKeyboard(false);
   };
 
   return (

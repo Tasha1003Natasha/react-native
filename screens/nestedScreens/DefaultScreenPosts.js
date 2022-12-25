@@ -11,29 +11,19 @@ import {
 import { Posts } from "../../components/Posts";
 import { Toolbar } from "../../components/Toolbar";
 
-// import { auth } from "../../firebase/config";
-// import { signOut } from "firebase/auth";
 import { useDispatch, useSelector } from "react-redux";
 import { authSignOutUser } from "../../redux/auth/authOperations";
 
-import { storage, db } from "../../firebase/config";
-import { collection, onSnapshot, query } from "firebase/firestore";
+import { db } from "../../firebase/config";
+import { collection, onSnapshot, query, where } from "firebase/firestore";
 
 export const DefaultScreenPosts = ({ route }) => {
   const allComments = route.params?.allComments;
-  // console.log("allComments", allComments);
-  // console.log("route.params", route.params);
-  // console.log("route.params", route.params?.allComments);
-
   const [posts, setPosts] = useState([]);
-  // console.log("route.params", route.params);
   const dispach = useDispatch();
-  const userName = useSelector((state) => state.auth.username);
-  const userEmail = useSelector((state) => state.auth.useremail);
-  const avatarURL = useSelector((state) => state.auth.avatarURL);
-
-  const { userId } = useSelector((state) => state.auth);
-  console.log("userId", userId);
+  const { userId, avatarURL, useremail, username } = useSelector(
+    (state) => state.auth
+  );
 
   const signOut = () => {
     dispach(authSignOutUser());
@@ -44,11 +34,8 @@ export const DefaultScreenPosts = ({ route }) => {
     const colRef = collection(db, "posts");
     const q = query(colRef, where("userId", "==", userId));
     const querySnapshot = onSnapshot(q, (snapshot) => {
-      // console.log("snapshot", snapshot);
       let posts = [];
-      // console.log("posts", posts);
       snapshot.docs.forEach((doc) => {
-        // console.log("doc.data", doc.data());
         posts.push({ ...doc.data(), id: doc.id });
       });
       setPosts(posts);
@@ -76,10 +63,7 @@ export const DefaultScreenPosts = ({ route }) => {
       <View style={styles.section}>
         <View style={styles.containerImage}>
           {avatarURL ? (
-            <ImageBackground
-              source={{ uri: avatarURL }}
-              style={styles.image}
-            ></ImageBackground>
+            <Image source={{ uri: avatarURL }} style={styles.image} />
           ) : (
             <ImageBackground
               source={require("../../assets/defult.png")}
@@ -88,8 +72,8 @@ export const DefaultScreenPosts = ({ route }) => {
           )}
 
           <View style={styles.containerUser}>
-            <Text style={styles.textUser}>{userName}</Text>
-            <Text style={styles.emailUser}>{userEmail}</Text>
+            <Text style={styles.textUser}>{username}</Text>
+            <Text style={styles.emailUser}>{useremail}</Text>
           </View>
         </View>
       </View>
@@ -104,11 +88,6 @@ export const DefaultScreenPosts = ({ route }) => {
           )}
         />
       </View>
-      {/* 
-      <View style={styles.post}>
-        <Posts posts={posts} />
-      </View> */}
-
       <Toolbar allComments={allComments} />
     </View>
   );

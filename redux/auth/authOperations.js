@@ -11,11 +11,8 @@ import { authSlice } from "./authReducer";
 const { updateUserProfile, authStateChange, authSignOut } = authSlice.actions;
 
 export const authSignUpUser =
-  (action, avatarImage) =>
-  // console.log("authSignUpUser", { useremail, password, username }, avatarImage);
-  async (dispatch, getState) => {
+  (action, avatarImage) => async (dispatch, getState) => {
     const { useremail, password, username } = action;
-    console.log("action", action);
     try {
       const { user } = await createUserWithEmailAndPassword(
         auth,
@@ -29,7 +26,6 @@ export const authSignUpUser =
         email: useremail,
         photoURL: avatarImage,
       });
-      // console.log(" updateProfile", updateProfile);
 
       const { displayName, uid, email, photoURL } = auth.currentUser;
 
@@ -41,7 +37,7 @@ export const authSignUpUser =
       };
 
       dispatch(updateUserProfile(userUpdateProfile));
-      console.log("user", user);
+      // console.log("user", user);
     } catch (error) {
       console.log("error", error);
       console.log("error.code", error.code);
@@ -49,20 +45,11 @@ export const authSignUpUser =
     }
   };
 
-// const invalidEmail = "";
-// const validPassword = "wowsuchsecureverysafepassword";
-// const user = await signInWithEmailAndPassword(
-//   auth,
-//   invalidEmail,
-//   validPassword
-// );
-
 export const authSignInUser =
   ({ useremail, password }) =>
   async (dispatch, getState) => {
     try {
       const user = await signInWithEmailAndPassword(auth, useremail, password);
-      console.log("user", user);
     } catch (error) {
       console.log("error", error);
       console.log("error.code", error.code);
@@ -76,7 +63,6 @@ export const authSignOutUser = () => async (dispatch, getState) => {
 
 export const authStateChangeUser = () => async (dispatch, getState) => {
   onAuthStateChanged(auth, (user) => {
-    // auth.onAuthStateChanged((user) => {
     if (user) {
       const userUpdateProfile = {
         username: user.displayName,

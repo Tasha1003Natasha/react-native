@@ -15,27 +15,17 @@ import {
 import UserAvatar from "react-native-user-avatar";
 import { useNavigation } from "@react-navigation/native";
 import { useSelector } from "react-redux";
-import { storage, db } from "../../firebase/config";
+import { db } from "../../firebase/config";
 import { collection, addDoc, doc, query, onSnapshot } from "firebase/firestore";
 
 export const CommentsScreen = ({ route }) => {
-  // console.log("route.params", route.params);
-  const { postId } = route.params;
-  // console.log("postId", postId);
-
+  const { postId, uploadPhoto } = route.params;
   ////////////////////Фото/////////////////////////
-  const { uploadPhoto } = route.params;
   const [comment, setComment] = useState("");
   const [allComments, setAllComments] = useState([]);
   const number = allComments.length;
-
   const navigation = useNavigation();
-  //////////////Keyboard/////////////////
-  const [isShowKeyboard, setIsShowKeyboard] = useState(false);
-  //   const userName = useSelector(state => state.user?.user?.email);
-  //   const avatarName = userName?.slice(0, 1).toLocaleUpperCase();
-
-  const { username } = useSelector((state) => state.auth);
+  const { username, avatarURL } = useSelector((state) => state.auth);
 
   useEffect(() => {
     getAllPosts();
@@ -43,7 +33,6 @@ export const CommentsScreen = ({ route }) => {
 
   ////////date////////////////////////
   const showTime = async () => {
-    // function showTime() {
     function addZero(i) {
       if (i < 10) {
         i = "0" + i;
@@ -58,8 +47,6 @@ export const CommentsScreen = ({ route }) => {
     const minutes = addZero(dateTime.getMinutes());
     let allMonth;
     const month = dateTime.getMonth();
-    // console.log("month", month);
-    // console.log("allMonth", allMonth);
 
     switch (month) {
       case 0:
@@ -99,7 +86,6 @@ export const CommentsScreen = ({ route }) => {
         allMonth = "декабря";
         break;
     }
-    // console.log("allMonth", allMonth);
 
     const allData =
       day +
@@ -124,7 +110,6 @@ export const CommentsScreen = ({ route }) => {
 
   const createPost = async () => {
     const data = await showTime();
-    // console.log("data", data);
     const comRef = doc(db, "posts", `${postId}`);
     const colRef = collection(comRef, "comments");
 
@@ -140,11 +125,8 @@ export const CommentsScreen = ({ route }) => {
     const colRef = collection(comRef, "comments");
     const q = query(colRef);
     const querySnapshot = onSnapshot(q, (snapshot) => {
-      // console.log("snapshot", snapshot);
       let allComments = [];
-      // console.log("allComments", allComments);
       snapshot.docs.forEach((doc) => {
-        console.log("doc.data", doc.data());
         allComments.push({ ...doc.data(), id: doc.id });
       });
       setAllComments(allComments);
@@ -162,8 +144,6 @@ export const CommentsScreen = ({ route }) => {
                 allComments: number,
               })
             }
-
-            // onPress={() => navigation.navigate("DefaultScreen")}
           >
             <Image
               source={require("../../assets/arrow_left.png")}
@@ -178,15 +158,6 @@ export const CommentsScreen = ({ route }) => {
         <ScrollView nestedScrollEnabled={true} style={{ width: "100%" }}>
           <View style={styles.containerCreateScreen}>
             <TouchableOpacity style={styles.containerScreen}>
-              {/* {image ? (
-              <Image
-                source={{ uri: uploadPhoto }}
-                style={{ width: 343, height: 240 }}
-              />
-            ) : (
-              <Image source={require("../../assets/default_image.png")} />
-            )} */}
-
               <Image
                 source={{ uri: uploadPhoto }}
                 style={{ width: 343, height: 240 }}
@@ -202,7 +173,13 @@ export const CommentsScreen = ({ route }) => {
                 data={allComments}
                 renderItem={({ item }) => (
                   <View style={styles.comment}>
-                    <UserAvatar style={styles.avatar} name={item.username} />
+                    {/* <UserAvatar style={styles.avatar} name={item.username} /> */}
+                    <View style={styles.avatarContainer}>
+                      <Image
+                        source={{ uri: avatarURL }}
+                        style={styles.avatar}
+                      />
+                    </View>
                     <View style={styles.containerItem}>
                       <Text style={styles.commentText}>{item.comment}</Text>
                       <Text style={styles.commentData}>{item.data}</Text>
@@ -214,13 +191,6 @@ export const CommentsScreen = ({ route }) => {
             </ScrollView>
 
             <View style={styles.form}>
-              {/* <View
-              style={{
-                ...styles.form,
-                marginBottom: isShowKeyboard ? 10 : 40,
-                marginTop: isShowKeyboard ? 20 : 10,
-              }}
-            > */}
               <TextInput
                 style={styles.input}
                 placeholder={"Комментировать..."}
@@ -228,11 +198,8 @@ export const CommentsScreen = ({ route }) => {
                 onChangeText={setComment}
                 autoCapitalize={"none"}
                 placeholderTextColor={comment ? "#212121" : "#BDBDBD"}
-
-                // onFocus={() => setIsShowKeyboard(true)}
               />
 
-              {/* <TouchableOpacity style={styles.send} onPress={createPost}   > */}
               <TouchableOpacity style={styles.send} onPress={sendComment}>
                 <Image source={require("../../assets/send.png")} />
               </TouchableOpacity>
@@ -274,7 +241,6 @@ const styles = StyleSheet.create({
     marginRight: 58,
   },
   containerCreateScreen: {
-    // paddingHorizontal: 16,
     alignItems: "center",
     marginHorizontal: 16,
     marginTop: 32,
@@ -300,30 +266,29 @@ const styles = StyleSheet.create({
   },
   containerComment: {
     flexDirection: "row",
-    // justifyContent: "center",
     marginTop: 32,
-    // marginBottom: 16,
-    // marginBottom: 24,
     marginHorizontal: 16,
     ///////////////////////
     width: "100%",
   },
-  avatar: {
+  avatarContainer: {
     alignItems: "flex-end",
-    borderRadius: 100 / 2,
     backgroundColor: "#F6F6F6",
+    borderRadius: 32 / 2,
+    borderWidth: 1,
+    borderColor: "#F6F6F6",
+    width: 32,
+    height: 32,
+  },
+  avatar: {
+    borderWidth: 1,
+    borderColor: "#F6F6F6",
+    borderRadius: 32 / 2,
     width: 32,
     height: 32,
   },
   comment: {
-    // alignItems: "flex-start",
     marginBottom: 24,
-    // backgroundColor: "rgba(0, 0, 0, 0.03)",
-    // padding: 16,
-    // marginLeft: 16,
-    // width: 299,
-    // height: 32,
-    // marginBottom: 24,
     flexDirection: "row",
   },
   containerItem: {
@@ -345,7 +310,6 @@ const styles = StyleSheet.create({
   },
 
   ////////////////////Форма///////////
-
   form: {
     marginHorizontal: 16,
     justifyContent: "flex-start",
@@ -354,11 +318,9 @@ const styles = StyleSheet.create({
   },
   input: {
     height: 50,
-    // marginBottom: 10,
     borderColor: "#E8E8E8",
     borderWidth: 1,
     backgroundColor: "#F6F6F6",
-    // color: "#BDBDBD",
     fontSize: 16,
     fontFamily: "Roboto-Regular",
     borderRadius: 100,
