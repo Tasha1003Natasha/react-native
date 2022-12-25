@@ -25,7 +25,7 @@ import { collection, addDoc } from "firebase/firestore";
 
 const initialState = {
   username: "",
-  email: "",
+  useremail: "",
   password: "",
 };
 
@@ -76,7 +76,7 @@ export const RegistrationScreen = ({ navigation }) => {
     // e.preventDefault();
     if (
       state.username.trim() === "" ||
-      state.email.trim() === "" ||
+      state.useremail.trim() === "" ||
       state.password.trim() === ""
     ) {
       return "Please fill in all fields!";
@@ -233,9 +233,12 @@ export const RegistrationScreen = ({ navigation }) => {
                 <TextInput
                   style={styles.input}
                   placeholder={"Адрес электронной почты"}
-                  value={state.email}
+                  value={state.useremail}
                   onChangeText={(value) =>
-                    setState((prevState) => ({ ...prevState, email: value }))
+                    setState((prevState) => ({
+                      ...prevState,
+                      useremail: value,
+                    }))
                   }
                   autoCapitalize={"none"}
                 />

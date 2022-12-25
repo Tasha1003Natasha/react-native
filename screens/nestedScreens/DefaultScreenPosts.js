@@ -29,7 +29,7 @@ export const DefaultScreenPosts = ({ route }) => {
   // console.log("route.params", route.params);
   const dispach = useDispatch();
   const userName = useSelector((state) => state.auth.username);
-  const userEmail = useSelector((state) => state.auth.email);
+  const userEmail = useSelector((state) => state.auth.useremail);
   const avatarURL = useSelector((state) => state.auth.avatarURL);
 
   const signOut = () => {
