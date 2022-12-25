@@ -10,44 +10,44 @@ import {
 import { authSlice } from "./authReducer";
 const { updateUserProfile, authStateChange, authSignOut } = authSlice.actions;
 
-export const authSignUpUser = (
-  { useremail, password, username },
-  avatarImage
-) =>
-  console.log("authSignUpUser", { useremail, password, username }, avatarImage);
-async (dispatch, getState) => {
-  try {
-    const { user } = await createUserWithEmailAndPassword(
-      auth,
-      useremail,
-      password
-    );
-    console.log("user", { user });
+export const authSignUpUser =
+  (action, avatarImage) =>
+  // console.log("authSignUpUser", { useremail, password, username }, avatarImage);
+  async (dispatch, getState) => {
+    const { useremail, password, username } = action;
+    console.log("action", action);
+    try {
+      const { user } = await createUserWithEmailAndPassword(
+        auth,
+        useremail,
+        password
+      );
+      console.log("user", { user });
 
-    await updateProfile(user, {
-      displayName: username,
-      email: useremail,
-      photoURL: avatarImage,
-    });
-    // console.log(" updateProfile", updateProfile);
+      await updateProfile(user, {
+        displayName: username,
+        email: useremail,
+        photoURL: avatarImage,
+      });
+      // console.log(" updateProfile", updateProfile);
 
-    const { displayName, uid, email, photoURL } = auth.currentUser;
+      const { displayName, uid, email, photoURL } = auth.currentUser;
 
-    const userUpdateProfile = {
-      username: displayName,
-      userId: uid,
-      useremail: email,
-      avatarURL: photoURL,
-    };
+      const userUpdateProfile = {
+        username: displayName,
+        userId: uid,
+        useremail: email,
+        avatarURL: photoURL,
+      };
 
-    dispatch(updateUserProfile(userUpdateProfile));
-    console.log("user", user);
-  } catch (error) {
-    console.log("error", error);
-    console.log("error.code", error.code);
-    console.log("error.message", error.message);
-  }
-};
+      dispatch(updateUserProfile(userUpdateProfile));
+      console.log("user", user);
+    } catch (error) {
+      console.log("error", error);
+      console.log("error.code", error.code);
+      console.log("error.message", error.message);
+    }
+  };
 
 // const invalidEmail = "";
 // const validPassword = "wowsuchsecureverysafepassword";

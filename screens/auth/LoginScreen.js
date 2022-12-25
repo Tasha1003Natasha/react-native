@@ -17,7 +17,7 @@ import { useDispatch } from "react-redux";
 import { authSignInUser } from "../../redux/auth/authOperations";
 
 const initialState = {
-  email: "",
+  useremail: "",
   password: "",
 };
 
@@ -87,9 +87,12 @@ export const LoginScreen = ({ navigation }) => {
                 <TextInput
                   style={styles.input}
                   placeholder={"Адрес электронной почты"}
-                  value={state.email}
+                  value={state.useremail}
                   onChangeText={(value) =>
-                    setState((prevState) => ({ ...prevState, email: value }))
+                    setState((prevState) => ({
+                      ...prevState,
+                      useremail: value,
+                    }))
                   }
                   autoCapitalize={"none"}
                   onFocus={() => setIsShowKeyboard(true)}

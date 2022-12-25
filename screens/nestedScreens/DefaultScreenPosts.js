@@ -32,6 +32,9 @@ export const DefaultScreenPosts = ({ route }) => {
   const userEmail = useSelector((state) => state.auth.useremail);
   const avatarURL = useSelector((state) => state.auth.avatarURL);
 
+  const { userId } = useSelector((state) => state.auth);
+  console.log("userId", userId);
+
   const signOut = () => {
     dispach(authSignOutUser());
   };
@@ -39,7 +42,7 @@ export const DefaultScreenPosts = ({ route }) => {
   ///////////Отримання даних з серверу ///////////////////////////
   const getAllPost = async () => {
     const colRef = collection(db, "posts");
-    const q = query(colRef);
+    const q = query(colRef, where("userId", "==", userId));
     const querySnapshot = onSnapshot(q, (snapshot) => {
       // console.log("snapshot", snapshot);
       let posts = [];
