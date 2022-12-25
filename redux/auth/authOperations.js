@@ -58,10 +58,10 @@ async (dispatch, getState) => {
 // );
 
 export const authSignInUser =
-  ({ email, password }) =>
+  ({ useremail, password }) =>
   async (dispatch, getState) => {
     try {
-      const user = await signInWithEmailAndPassword(auth, email, password);
+      const user = await signInWithEmailAndPassword(auth, useremail, password);
       console.log("user", user);
     } catch (error) {
       console.log("error", error);
@@ -81,7 +81,7 @@ export const authStateChangeUser = () => async (dispatch, getState) => {
       const userUpdateProfile = {
         username: user.displayName,
         userId: user.uid,
-        email: user.email,
+        useremail: user.email,
         avatarURL: user.photoURL,
       };
 
