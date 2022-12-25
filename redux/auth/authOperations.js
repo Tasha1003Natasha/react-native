@@ -36,7 +36,7 @@ async (dispatch, getState) => {
     const userUpdateProfile = {
       username: displayName,
       userId: uid,
-      email,
+      useremail: email,
       avatarURL: photoURL,
     };
 
