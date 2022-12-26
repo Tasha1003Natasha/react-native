@@ -16,9 +16,7 @@ import {
 } from "react-native";
 import { useDispatch } from "react-redux";
 import { authSignUpUser } from "../../redux/auth/authOperations";
-
 import * as ImagePicker from "expo-image-picker";
-
 import { storage } from "../../firebase/config";
 import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 
@@ -47,6 +45,7 @@ export const RegistrationScreen = ({ navigation }) => {
   const handleClick = () => setType("text");
 
   const [image, setImage] = useState(null);
+
   const removeImage = () => {
     setImage(null);
   };
@@ -65,15 +64,27 @@ export const RegistrationScreen = ({ navigation }) => {
     return () => subscription.remove();
   }, []);
 
-  const handleSubmit = async () => {
-    const avatarImage = await uploadAvatarToServer();
+  const showMessage = () => {
     if (
       state.username.trim() === "" ||
       state.useremail.trim() === "" ||
       state.password.trim() === ""
     ) {
-      return "Please fill in all fields!";
+      alert("Please fill in all fields!");
+      return;
+    } else if (state.password.length < 6) {
+      alert("Passwords must be at least 6 characters long!");
+      return;
+    } else if (!image) {
+      alert("Please choose an avatar!");
+      return;
     }
+  };
+
+  const handleSubmit = async () => {
+    showMessage();
+
+    const avatarImage = await uploadAvatarToServer();
 
     Keyboard.dismiss();
     dispatch(authSignUpUser(state, avatarImage));

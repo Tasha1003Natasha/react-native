@@ -6,6 +6,7 @@ import { authStateChangeUser } from "../redux/auth/authOperations";
 /////////////////////////////////////////////////////////
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
+////////////////////////////////////////////////////////
 
 export const Main = () => {
   const { stateChange } = useSelector((state) => state.auth);
